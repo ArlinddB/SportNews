@@ -132,6 +132,11 @@
             </div>
           </div>
         </li>
+        <li>
+          <router-link to="/login" class="inline block px-4 py-2.5 bg-teal-300 dark:bg-blue-500 rounded-lg text-zinc-100 hover:text-white">
+            Login
+          </router-link>
+        </li>
         <button
           @click="toggleDark()"
           class="px-4 py-2 bg-gray-700 dark:bg-purple-700 text-zinc-100 hover:text-white"
