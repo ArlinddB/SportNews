@@ -64,7 +64,7 @@
               "
             >
               <span class="mr-4 text-zinc-100 hover:text-white"
-                >Dropdown Menu</span
+                >Managment</span
               >
               <svg
                 class="w-5 h-5 text-zinc-100 hover:text-white"
@@ -94,7 +94,7 @@
               "
             >
               <router-link
-                to="/"
+                to="/category"
                 class="
                   block
                   px-4
@@ -103,45 +103,21 @@
                   hover:text-white hover:bg-indigo-400
                 "
               >
-                Dropdown List 1
-              </router-link>
-              <router-link
-                to="/"
-                class="
-                  block
-                  px-4
-                  py-2
-                  text-sm text-zinc-100
-                  hover:text-white hover:bg-indigo-400
-                "
-              >
-                Dropdown List 2
-              </router-link>
-              <router-link
-                to="/"
-                class="
-                  block
-                  px-4
-                  py-2
-                  text-sm text-zinc-100
-                  hover:text-white hover:bg-indigo-400
-                "
-              >
-                Dropdown List 3
+                Categories
               </router-link>
             </div>
           </div>
         </li>
         <li>
-          <router-link to="/login" class="inline block px-4 py-2.5 bg-teal-300 dark:bg-blue-500 rounded-lg text-zinc-100 hover:text-white">
+          <router-link to="/login" class="inline block px-4 py-2 bg-gray-700 dark:bg-blue-500 rounded-lg text-zinc-100 hover:text-white">
             Login
           </router-link>
         </li>
         <button
           @click="toggleDark()"
-          class="px-4 py-2 bg-gray-700 dark:bg-purple-700 text-zinc-100 hover:text-white"
+          class="inline block px-4 py-2 bg-gray-700 dark:bg-purple-700 text-zinc-100 hover:text-white"
         >
-          Toggle {{isDark ? 'Light' : 'Dark'}}
+          {{isDark ? 'Light' : 'Dark'}}
         </button>
       </ul>
     </nav>
