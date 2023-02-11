@@ -1,19 +1,19 @@
 <script>
+import { mapState } from "vuex";
 export default {
-  data() {
-    return {
-      newCategory: {
-        title: "",
-      },
-      allCategories: this.$store.state.categories,
-    };
+  computed: {
+    ...mapState(["category"]),
   },
-  methods: {
-    async handleCreateCategory() {
-      this.$store.dispatch("createCategory", { ...this.newCategory });
-      this.newCategory.title = "";
-    },
+  mounted() {
+    this.$store.dispatch("getById", this.$route.params.id);
   },
+  // methods: {
+  //   async handleUpdateCategory() {
+  //     this.$store.dispatch("editCategory", {...this.category} );
+  //     this.$router.back();
+  //     // .push('/category')
+  //   },
+  // },
 };
 </script>
 
@@ -34,16 +34,16 @@ export default {
       "
     >
       <h1 class="text-2xl font-bold mb-8 text-zinc-700 dark:text-zinc-300">
-        Add a new category
+        Details
       </h1>
-      <form @submit.prevent="handleCreateCategory">
+      <form @submit.prevent="">
         <div class="relative z-0 w-full mb-5">
           <input
             type="text"
             placeholder=" "
             id="title"
-            v-model="newCategory.title"
-            required
+            v-model="category.title"
+            :disabled="true"
             class="
               pt-3
               pb-2
@@ -69,12 +69,13 @@ export default {
               text-zinc-700
               dark:text-zinc-300
             "
-            >Enter category name</label
+            >Category name</label
           >
         </div>
 
         <div class="flex justify-between">
           <router-link
+            to="/category"
             class="
               hvr-icon-back
               px-4
@@ -91,13 +92,12 @@ export default {
               hover:bg-gray-700 hover:shadow-lg
               focus:outline-none
             "
-            to="/category"
           >
             <i class="fa-solid fa-angle-left hvr-icon mr-2"></i>
             Back to list
           </router-link>
 
-          <button
+          <!-- <button
             type="submit"
             id="submitBtn"
             class="
@@ -116,8 +116,8 @@ export default {
               focus:outline-none
             "
           >
-            Add Category
-          </button>
+            Update Category
+          </button> -->
         </div>
       </form>
     </div>

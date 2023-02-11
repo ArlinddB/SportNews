@@ -20,7 +20,7 @@ export default {
   <div class="container max-w-lg mx-auto px-4 sm:px-8 min-h-[79vh]">
     <div class="py-8 -mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
       <div class="pt-2 pb-6 flex justify-between">
-        <a
+        <router-link
           class="
             inline-block
             px-4
@@ -39,9 +39,9 @@ export default {
             duration-150
             ease-in-out
           "
-          href="/category/create"
-          >Add new Category</a
-        >
+          to="/category/create"
+          >Add new Category
+        </router-link>
       </div>
       <div class="inline-block min-w-full shadow-md rounded-lg overflow-hidden">
         <table class="min-w-full leading-normal">
@@ -56,7 +56,8 @@ export default {
                   dark:bg-gray-900
                   text-left text-xs
                   font-semibold
-                  text-zinc-700 dark:text-zinc-300
+                  text-zinc-700
+                  dark:text-zinc-300
                   uppercase
                   tracking-wider
                 "
@@ -72,7 +73,8 @@ export default {
                   dark:bg-gray-900
                   text-left text-xs
                   font-semibold
-                  text-zinc-700 dark:text-zinc-300
+                  text-zinc-700
+                  dark:text-zinc-300
                   uppercase
                   tracking-wider
                 "
@@ -90,17 +92,25 @@ export default {
                   border-t border-zinc-400
                   bg-gray-50
                   dark:bg-gray-900
-                  text-zinc-700 dark:text-zinc-300 text-sm
+                  text-zinc-700
+                  dark:text-zinc-300
+                  text-sm
                   break-all
                 "
               >
                 {{ category.title }}
               </td>
               <td
-                class="px-5 py-5 border-t border-zinc-400 bg-gray-50
-                  dark:bg-gray-900 text-sm"
+                class="
+                  px-5
+                  py-5
+                  border-t border-zinc-400
+                  bg-gray-50
+                  dark:bg-gray-900
+                  text-sm
+                "
               >
-                <a
+                <router-link
                   class="
                     inline-block
                     px-4
@@ -123,8 +133,8 @@ export default {
                     ease-in-out
                     m-1
                   "
-                  
-                  ><i class="fa-solid fa-pen mr-2"></i>Edit</a
+                  :to="`/category/edit/${category._id}`"
+                  ><i class="fa-solid fa-pen mr-2"></i>Edit</router-link
                 >
                 <a
                   class="
@@ -149,11 +159,12 @@ export default {
                     duration-150
                     ease-in-out
                     m-1
+                    cursor-pointer
                   "
-                  
+                  @click="handleDeleteCategory(category._id)"
                   ><i class="fa-solid fa-trash mr-2"></i>Delete</a
                 >
-                <a
+                <router-link
                   class="
                     inline-block
                     px-4
@@ -172,8 +183,8 @@ export default {
                     ease-in-out
                     m-1
                   "
-                  
-                  ><i class="fa-solid fa-eye mr-2"></i>Details</a
+                  :to="`/category/details/${category._id}`"
+                  ><i class="fa-solid fa-eye mr-2"></i>Details</router-link
                 >
               </td>
             </tr>

@@ -33,6 +33,24 @@ const routes = [
             import(
               '../views/categories/CategoryCreateView.vue'
             )
+        },
+        {
+          name: 'category-edit',
+          path: 'edit/:id',
+          component: () => 
+          import(
+            '../views/categories/CategoryEditView.vue'
+            ),
+            params: true,
+        },
+        {
+          name: 'category-details',
+          path: 'details/:id',
+          component: () => 
+          import(
+            '../views/categories/CategoryDetailsView.vue'
+            ),
+            params: true,
         }
       ]
     },
