@@ -2,16 +2,28 @@
 export default {
   data() {
     return {
+      errors: {
+        title: []
+      },
       newCategory: {
         title: "",
       },
-      allCategories: this.$store.state.categories,
     };
   },
-  methods: {
+  methods: {  
     async handleCreateCategory() {
+      this.errors.title = [];
+      if(this.newCategory.title == ""){
+        this.errors.title.push("Title is required")
+        return;
+      }
+      if(this.newCategory.title.length < 3){
+        this.errors.title.push("Title should be at least 3 characters")
+        return;
+      }
       this.$store.dispatch("createCategory", { ...this.newCategory });
       this.newCategory.title = "";
+      this.$router.back()
     },
   },
 };
@@ -71,6 +83,9 @@ export default {
             "
             >Enter category name</label
           >
+          <span v-show="errors.title.length > 0" class="text-red-500" v-for="(error, idx) in errors.title" :key="idx">
+            {{ error }}
+          </span>
         </div>
 
         <div class="flex justify-between">

@@ -1,8 +1,8 @@
 <template>
   <div>
-      <NavBar />
+      <NavBar v-if="$route.name!='404'" />
       <router-view />
-      <FooterComponent />
+      <FooterComponent v-if="$route.name!='404'" />
   </div>
 </template>
 

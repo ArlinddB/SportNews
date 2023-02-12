@@ -4,11 +4,13 @@ const routes = [
     {
       path: '/',
       name: 'home',
+      meta: { title: 'Home' },
       component: () => import('../views/HomePage.vue')
     },
     {
       path: '/login',
       name: 'login',
+      meta: { title: 'Login' },
       component:
       () => import(
         '../views/Login.vue'
@@ -21,6 +23,7 @@ const routes = [
         {
           name: 'category-list',
           path: '',
+          meta: { title: 'Categories' },
           component: () => 
             import(
               '../views/categories/CategoryList.vue'
@@ -29,6 +32,7 @@ const routes = [
         {
           name: 'category-create',
           path: 'create',
+          meta: { title: 'Create' },
           component: () => 
             import(
               '../views/categories/CategoryCreateView.vue'
@@ -37,6 +41,7 @@ const routes = [
         {
           name: 'category-edit',
           path: 'edit/:id',
+          meta: { title: 'Edit' },
           component: () => 
           import(
             '../views/categories/CategoryEditView.vue'
@@ -45,7 +50,8 @@ const routes = [
         },
         {
           name: 'category-details',
-          path: 'details/:id',
+          path: 'details/:id',          
+          meta: { title: 'Details' },
           component: () => 
           import(
             '../views/categories/CategoryDetailsView.vue'
@@ -55,8 +61,9 @@ const routes = [
       ]
     },
     {
-      path: '/404',
+      path: '/NotFound',
       name: '404',
+      meta: { title: 'Not Found' },
       component:
       () => import(
         '../views/FourOFourView.vue'
@@ -79,6 +86,7 @@ const routes = [
   );
   
   router.beforeEach((to, from, next) => {
+      document.title = to.meta.title + ' - SportNews'
       if ((guestRouteNames.includes(to.name))) {
         next({ name: 'home' });
       }

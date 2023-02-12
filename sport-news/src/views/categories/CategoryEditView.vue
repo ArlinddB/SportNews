@@ -1,6 +1,13 @@
 <script>
 import { mapState } from "vuex";
 export default {
+  data(){
+    return{
+      errors: {
+        title: []
+      }
+    }
+  },
   computed: {
     ...mapState(["category"]),
   },
@@ -9,6 +16,15 @@ export default {
   },
   methods: {
     async handleUpdateCategory() {
+      this.errors.title = [];
+      if(this.category.title == ""){
+        this.errors.title.push("Title is required")
+        return;
+      }
+      if(this.category.title.length < 3){
+        this.errors.title.push("Title should be at least 3 characters")
+        return;
+      }
       this.$store.dispatch("editCategory", {...this.category} );
       this.$router.back();
       // .push('/category')
@@ -71,6 +87,9 @@ export default {
             "
             >Enter category name</label
           >
+          <span v-show="errors.title.length > 0" class="text-red-500" v-for="(error, idx) in errors.title" :key="idx">
+            {{ error }}
+          </span>
         </div>
 
         <div class="flex justify-between">

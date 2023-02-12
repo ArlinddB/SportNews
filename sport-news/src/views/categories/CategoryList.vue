@@ -193,14 +193,4 @@ export default {
       </div>
     </div>
   </div>
-  <!-- <div>
-    <h2>Cat list</h2>
-    <div v-for="category in this.categories" :key="category._id">
-      <h3>{{ category.title }}</h3>
-
-      <p>{{ category.description }}</p>
-
-      <button @click="handleDeleteCategory(category._id)">Delete</button>
-    </div>
-  </div> -->
 </template>
