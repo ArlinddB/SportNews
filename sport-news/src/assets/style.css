@@ -8,12 +8,12 @@
     transform-origin: 0%;
 }
 
-input:focus ~ label,
-input:not(:placeholder-shown) ~ label,
-textarea:focus ~ label,
-textarea:not(:placeholder-shown) ~ label,
-select:focus ~ label,
-select:not([value='']):valid ~ label {
+input:focus~label,
+input:not(:placeholder-shown)~label,
+textarea:focus~label,
+textarea:not(:placeholder-shown)~label,
+select:focus~label,
+select:not([value='']):valid~label {
     --tw-translate-x: 0;
     --tw-translate-y: 0;
     --tw-rotate: 0;
@@ -25,8 +25,8 @@ select:not([value='']):valid ~ label {
     --tw-translate-y: -1.5rem;
 }
 
-input:focus ~ label,
-select:focus ~ label {
+input:focus~label,
+select:focus~label {
     --tw-text-opacity: 1;
     color: #2481ee;
     /*left: 0px;*/
@@ -48,22 +48,84 @@ select:focus ~ label {
     cursor: pointer;
 }
 
-    .hvr-icon-back:hover {
-        background: #10519c;
+.hvr-icon-back:hover {
+    background: #10519c;
+}
+
+.hvr-icon-back .hvr-icon {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-transition-duration: 0.1s;
+    transition-duration: 0.1s;
+    -webkit-transition-property: transform;
+    transition-property: transform;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+}
+
+.hvr-icon-back:hover .hvr-icon,
+.hvr-icon-back:focus .hvr-icon,
+.hvr-icon-back:active .hvr-icon {
+    -webkit-transform: translateX(-4px);
+    transform: translateX(-4px);
+}
+
+/* Loader */
+.loader {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    border: 3px solid;
+    border-color: rgb(107 114 128) rgb(107 114 128) transparent transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.loader::after,
+.loader::before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: 3px solid;
+    border-color: transparent transparent #f65525 #f65525;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: rotationBack 0.5s linear infinite;
+    transform-origin: center center;
+}
+
+.loader::before {
+    width: 42px;
+    height: 42px;
+    border-color: rgb(107 114 128) rgb(107 114 128) transparent transparent;
+    animation: rotation 1.5s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
     }
 
-    .hvr-icon-back .hvr-icon {
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
-        -webkit-transition-duration: 0.1s;
-        transition-duration: 0.1s;
-        -webkit-transition-property: transform;
-        transition-property: transform;
-        -webkit-transition-timing-function: ease-out;
-        transition-timing-function: ease-out;
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotationBack {
+    0% {
+        transform: rotate(0deg);
     }
 
-    .hvr-icon-back:hover .hvr-icon, .hvr-icon-back:focus .hvr-icon, .hvr-icon-back:active .hvr-icon {
-        -webkit-transform: translateX(-4px);
-        transform: translateX(-4px);
+    100% {
+        transform: rotate(-360deg);
     }
+}

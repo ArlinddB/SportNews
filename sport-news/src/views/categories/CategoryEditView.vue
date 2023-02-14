@@ -1,5 +1,5 @@
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   data(){
     return{
@@ -9,7 +9,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["category"]),
+    ...mapGetters(["category"]),
   },
   mounted() {
     this.$store.dispatch("getById", this.$route.params.id);
