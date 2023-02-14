@@ -57,6 +57,15 @@ const routes = [
             '../views/categories/CategoryDetailsView.vue'
             ),
             params: true,
+        },
+        {
+          path: '/register',
+          name: 'register',
+          meta: { title: 'Register' },
+          component:
+          () => import(
+            '../views/Register.vue'
+          )
         }
       ]
     },

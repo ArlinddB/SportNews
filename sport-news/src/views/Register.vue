@@ -5,7 +5,7 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,0,0"
     />
     <div class="min-h-[79vh]">
-      <div class="pt-16">
+      <div class="py-12">
         <div class="signup bg-gray-50 dark:bg-gray-900 shadow-md">
           <form class="form1">
             <div
@@ -36,7 +36,36 @@
               </span>
             </div>
 
-            <div
+              <div
+              class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
+            >
+              <input
+                type="text"
+                placeholder="Email"
+                class="
+                  border-0
+                  outline-none
+                  focus:ring-0
+                  input-field
+                  text-zinc-700
+                  dark:text-zinc-300
+                "
+                required
+              />
+              <span
+                class="
+                  material-symbols-outlined
+                  icon
+                  text-zinc-700
+                  dark:text-zinc-500
+                "
+              >
+                mail
+              </span>
+
+            </div>
+
+                        <div
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
@@ -51,7 +80,7 @@
                   text-zinc-700
                   dark:text-zinc-300
                 "
-                v-model="password"
+                v-model="Password"
               />
               <input
                 v-else
@@ -65,7 +94,7 @@
                   text-zinc-700
                   dark:text-zinc-300
                 "
-                v-model="password"
+                v-model="Password"
               />
               <span
                 class="
@@ -96,19 +125,78 @@
                 ></i>
               </span>
             </div>
-            <p>
-              Don't have an account?
-            <router-link to="/register">
-            Register
-            </router-link>
-            </p>
+
+
+            <div
+              class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
+            >
+              <input
+                v-if="showPassword"
+                type="text"
+                placeholder="Password"
+                class="
+                  border-0
+                  outline-none
+                  focus:ring-0
+                  input-field
+                  text-zinc-700
+                  dark:text-zinc-300
+                "
+                v-model="confirmPassword"
+              />
+              <input
+                v-else
+                type="password"
+                placeholder="Confirm Password"
+                class="
+                  border-0
+                  outline-none
+                  focus:ring-0
+                  input-field
+                  text-zinc-700
+                  dark:text-zinc-300
+                "
+                v-model="confirmPassword"
+              />
+              <span
+                class="
+                  material-symbols-outlined
+                  icon
+                  text-zinc-700
+                  dark:text-zinc-500
+                "
+              >
+                lock
+              </span>
+              <span>
+                <i
+                  @click="toggleShow"
+                  class="
+                    fas
+                    text-zinc-700
+                    dark:text-zinc-400
+                    cursor-pointer
+                    absolute
+                    right-0
+                    bottom-4
+                  "
+                  :class="{
+                    'fa-eye-slash': showPassword,
+                    'fa-eye': !showPassword,
+                  }"
+                ></i>
+              </span>
+            </div>
 
             <button type="submit" class="loginbtn">
-              Login
+              Register
               <span class="material-symbols-outlined"> arrow_forward </span>
             </button>
             <br />
-            <a href="#" style="color: #216ce7"> Forgot Password? </a>
+            <p>Already have an account?  
+                <router-link to="/login">
+                Login
+                </router-link></p>
           </form>
         </div>
       </div>
@@ -210,7 +298,7 @@ input:focus ~ label {
 </style>
 <script>
 export default {
-  name: "login-view",
+  name: "register-view",
   data() {
     return {
       showPassword: false,
