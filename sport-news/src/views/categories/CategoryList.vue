@@ -111,7 +111,7 @@ export default {
             >Add new Category
           </router-link>
           <div
-            v-if="!paginatedCategories"
+            v-if="paginatedCategories"
             class="
               w-auto
               flex
