@@ -5,8 +5,20 @@ import updateCategorySchema from "../validators/categories/update";
 
 const controller = {
   list: async (req, res) => {
-    const list = await categoryModel.find();
-    return res.json(list);
+    try {
+      let page = req.query.page || 1;
+
+      const limitValue = req.query.limit || 10;
+      const skipValue = (page - 1) * limitValue || 0;
+
+      const list = await categoryModel.find().skip(skipValue).limit(limitValue);
+
+      return res.json({ page: page, list: list.reverse() });
+
+    } catch (error) {
+      console.error("Error while getting categories: " + error.message);
+      res.json("Error while getting categories: " + error.message)
+    }
   },
   find: async (req, res) => {
     try {
@@ -14,20 +26,19 @@ const controller = {
         _id: req.params.categoryId,
       });
 
-      if (!category) throw Error("Category not found");
+      if (category == null) return res.json(ReasonPhrases.NOT_FOUND);
       return res.json(category);
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      console.error(ReasonPhrases.NOT_FOUND);
+      return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
     }
   },
   create: async (req, res) => {
-    console.log("req.body - ", req.body);
     const validationResult = createCategorySchema.validate(req.body);
-
+    
     if (validationResult.error) {
-      console.log(validationResult.value);
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        message: ReasonPhrases.UNAUTHORIZED,
+      return res.status(StatusCodes.LENGTH_REQUIRED).json({
+        message: ReasonPhrases.LENGTH_REQUIRED,
         error: validationResult.error.message,
       });
     }
@@ -47,11 +58,10 @@ const controller = {
   },
   edit: async (req, res) => {
     const validationResult = updateCategorySchema.validate(req.body);
-    if (validationResult.error) {
-      console.log(validationResult.value);
 
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        message: ReasonPhrases.UNAUTHORIZED,
+    if (validationResult.error) {
+      return res.status(StatusCodes.LENGTH_REQUIRED).json({
+        message: ReasonPhrases.LENGTH_REQUIRED,
         error: validationResult.error.message,
       });
     }
@@ -63,12 +73,14 @@ const controller = {
         _id: req.params.categoryId,
       });
 
+      if(updatedCategory == null){
+        console.log("null");
+      }
+
       return res.json(updatedCategory);
     } catch (err) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        message: ReasonPhrases.UNAUTHORIZED,
-        error: validationResult.error.message,
-      });
+      console.error(ReasonPhrases.NOT_FOUND);
+      return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
     }
   },
   delete: async (req, res) => {
@@ -78,8 +90,7 @@ const controller = {
       await categoryModel.deleteOne({ _id: categoryId });
       res.json({ deleted: true });
     } catch (err) {
-      res
-        .status(StatusCodes.NOT_FOUND)
+      return res.status(StatusCodes.NOT_FOUND)
         .json({ message: ReasonPhrases.NOT_FOUND });
     }
   },

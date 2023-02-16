@@ -1,38 +1,92 @@
 <script>
 import { mapGetters } from "vuex";
+import axios from "axios";
 
 export default {
-  data(){
-    return{
+  data() {
+    return {
       search: '',
-    }
+      page: 1,
+      pageSize: 10,
+      pageSizes: [5, 10, 15, 20],
+      count: 0,
+      total: 0,
+    };
   },
   computed: {
-    ...mapGetters(["categories", "isLoading"]),
+    ...mapGetters(["paginatedCategories", "allCategories", "isLoading"]),
     filteredList() {
-      return this.categories.filter(c => c.title.toLowerCase().includes(this.search.toLowerCase()))
-    }
+      if(this.search){
+        return this.allCategories.filter((c) =>
+          c?.title?.toLowerCase().includes(this.search.toLowerCase())
+        );
+      }
+      return this.paginatedCategories
+    },
   },
   methods: {
     handleDeleteCategory(categoryId) {
       this.$store.dispatch("deleteCategory", categoryId);
     },
+    clickCallback() {
+      const params = this.getRequestParams(
+        this.page,
+        this.pageSize,
+      );
+      this.$store.dispatch("fetchCategories", params);
+      axios.get(`http://localhost:4000/categories?limit=0`).then((res) => {
+        const { list } = res.data;
+
+        this.count = list.length;
+
+        this.total = Math.ceil(this.count / this.pageSize);
+      });
+
+      sessionStorage.setItem("page", this.page);
+      sessionStorage.setItem("pageSize", this.pageSize);
+    },
+    getRequestParams(page, pageSize) {
+      let params = {};
+
+      if (page) {
+        params["page"] = page;
+      }
+
+      if (pageSize) {
+        params["size"] = pageSize;
+      }
+
+      return params;
+    },
+    handlePageSizeChange(event) {
+      this.pageSize = event.target.value;
+      this.clickCallback();
+    },
   },
   mounted() {
-    this.$store.dispatch("fetchCategories");
+    const storedPage = sessionStorage.getItem("page");
+    const storedPageSize = sessionStorage.getItem("pageSize");
+
+    if (storedPage) {
+      this.page = parseInt(storedPage);
+    }
+
+    if (storedPageSize) {
+      this.pageSize = parseInt(storedPageSize);
+    }
+
+    this.clickCallback();
   },
 };
 </script>
 
 <template>
-  <div class="min-h-[79vh] flex justify-center items-center">
+  <div class="min-h-[79vh] flex flex-col justify-center items-center">
     <div v-if="isLoading">
       <span class="loader"></span>
     </div>
-    <div v-if="!isLoading" class="container max-w-lg mx-auto px-4 sm:px-8">
-      <div
-        class="py-8 -mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto"
-      >
+    <div v-if="!isLoading" class="container max-w-2xl mx-auto px-4 sm:px-8">
+      <div class="py-8 -mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
         <div class="pt-2 pb-6 flex justify-between">
           <router-link
             class="
@@ -56,8 +110,32 @@ export default {
             to="/category/create"
             >Add new Category
           </router-link>
-          <div class="w-auto flex justify-end px-2 items-center focus:ring-0 transition duration-300 border-b-2 border-b-[#006db0]">
-            <input type="search" v-model="search" placeholder="Search..." class="bg-transparent text-zinc-700 dark:text-zinc-300 border-none outline-none">
+          <div
+            v-if="!paginatedCategories"
+            class="
+              w-auto
+              flex
+              justify-end
+              px-2
+              items-center
+              focus:ring-0
+              transition
+              duration-300
+              border-b-2 border-b-[#006db0]
+            "
+          >
+            <input
+              type="search"
+              v-model="search"
+              placeholder="Search..."
+              class="
+                bg-transparent
+                text-zinc-700
+                dark:text-zinc-300
+                border-none
+                outline-none
+              "
+            />
           </div>
         </div>
         <div
@@ -105,6 +183,7 @@ export default {
             <tbody>
               <tr v-for="category in this.filteredList" :key="category._id">
                 <td
+                  style="width: 250px;"
                   class="
                     px-5
                     py-5
@@ -210,6 +289,28 @@ export default {
             </tbody>
           </table>
         </div>
+      </div>      
+      <div v-if="!search && !paginatedCategories" class="my-10 flex">
+        <div class="mb-3 mr-3 flex flex-col text-zinc-800 dark:text-zinc-300">
+          Items per Page:
+          <select v-model="pageSize" @change="handlePageSizeChange($event)" class="bg-transparent border-b outline-none">
+            <option v-for="size in pageSizes" :key="size" :value="size" class="dark:text-zinc-800">
+              {{ size }}
+            </option>
+          </select>
+        </div>
+        <vue-awesome-paginate
+          :total-items="total"
+          v-model="page"
+          :items-per-page="1"
+          :max-pages-shown="3"
+          :on-click="clickCallback"
+          :show-breakpoint-buttons="true"
+          :disable-breakpoint-buttons="false"
+          paginationContainerClass="flex gap-3"
+          paginateButtonsClass="w-[40px] h-[40px] p-[5px] rounded-full cursor-pointer bg-gray-200 dark:bg-gray-300 text-zinc-800 hover:bg-gray-300 hover:dark:bg-gray-400"
+          activePageClass="bg-blue-600 text-zinc-200 dark:bg-blue-600 dark:text-zinc-300"
+        />
       </div>
     </div>
   </div>

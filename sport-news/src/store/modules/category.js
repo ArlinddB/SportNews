@@ -1,27 +1,33 @@
 import axios from "axios";
 
 const state = () => ({
-  categories: [],
+  paginatedCategories: [],
+  allCategories: [],
   category: [],
   isLoading: null,
 });
 
 const getters = {
-  categories: (state) => state.categories,
+  paginatedCategories: (state) => state.paginatedCategories,
+  allCategories: (state) => state.allCategories,
   category: (state) => state.category,
   isLoading: (state) => state.isLoading,
 };
 
 const actions = {
-  async fetchCategories({ commit }) {
+  async fetchCategories({ commit }, params) {
     commit("setIsLoading", true);
 
-    const res = await axios.get("http://localhost:4000/categories");
-    const categories = await res.data;
+    const res = await axios.get(`http://localhost:4000/categories?page=${params.page}&limit=${params.size}`);
+    const paginatedCategories = await res.data.list;
+
+    const res1 = await axios.get(`http://localhost:4000/categories?limit=0`);
+    const allCategories = await res1.data.list;
+
+    commit("setPaginatedCategories", paginatedCategories);
+    commit("setAllCategories", allCategories);
 
     commit("setIsLoading", false);
-
-    commit("setCategories", categories);
   },
   async getById({ commit }, id) {
     commit("setIsLoading", true);
@@ -29,9 +35,9 @@ const actions = {
     const res = await axios.get(`http://localhost:4000/categories/${id}`);
     const category = await res.data;
 
-    commit("setIsLoading", false);
-
     commit("setCategory", category);
+
+    commit("setIsLoading", false);
   },
   async createCategory({ commit }, categoryData) {
     const res = await axios.post(
@@ -59,21 +65,27 @@ const actions = {
 };
 
 const mutations = {
-  setCategories(state, categories) {
-    state.categories = categories;
+  setPaginatedCategories(state, paginatedCategories) {
+    state.paginatedCategories = paginatedCategories;
+  },
+  setAllCategories(state, allCategories) {
+    state.allCategories = allCategories;
   },
   setCategory(state, category) {
     state.category = category;
   },
   addCategory(state, category) {
-    state.categories.push(category);
+    state.paginatedCategories.push(category);
   },
   updateCategory(state, category) {
-    let c = state.categories.find((v) => v._id == category._id);
+    let c = state.paginatedCategories.find((v) => v._id == category._id);
     c = category;
   },
   removeCategoryById(state, categoryId) {
-    state.categories = state.categories.filter(
+    state.paginatedCategories = state.paginatedCategories.filter(
+      (category) => category._id !== categoryId
+    );
+    state.allCategories = state.allCategories.filter(
       (category) => category._id !== categoryId
     );
   },
