@@ -290,7 +290,7 @@ export default {
           </table>
         </div>
       </div>      
-      <div v-if="!search && !paginatedCategories" class="my-10 flex">
+      <div v-if="!search && paginatedCategories.length" class="my-10 flex">
         <div class="mb-3 mr-3 flex flex-col text-zinc-800 dark:text-zinc-300">
           Items per Page:
           <select v-model="pageSize" @change="handlePageSizeChange($event)" class="bg-transparent border-b outline-none">
