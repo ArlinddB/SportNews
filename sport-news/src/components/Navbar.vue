@@ -105,23 +105,36 @@
               >
                 Categories
               </router-link>
+
+              <router-link
+                to="/posts"
+                class="
+                  block
+                  px-4
+                  py-2
+                  text-sm text-zinc-100
+                  hover:text-white hover:bg-indigo-400
+                "
+              >
+                Posts
+              </router-link>
             </div>
           </div>
         </li>
         <li>
-          <router-link to="/login" class="inline block px-4 py-2 bg-gray-700 dark:bg-blue-500 rounded-lg text-zinc-100 hover:text-white">
+          <router-link to="/login" class="inline-block px-4 py-2 bg-gray-700 dark:bg-blue-500 rounded-lg text-zinc-100 hover:text-white">
             Login
           </router-link>
         </li>
         <button v-if="isDark"
           @click="toggleDark()"
-          class="inline block text-2xl text-zinc-100 hover:text-yellow-500 transition"
+          class="inline-block text-2xl text-zinc-100 hover:text-yellow-500 transition"
         >
           <i class="fa-solid fa-sun"></i>
         </button>
         <button v-if="!isDark"
           @click="toggleDark()"
-          class="inline block text-2xl text-gray-800 hover:text-zinc-100 transition"
+          class="inline-block text-2xl text-gray-800 hover:text-zinc-100 transition"
         >
          <i class="fa-solid fa-moon"></i>
         </button>

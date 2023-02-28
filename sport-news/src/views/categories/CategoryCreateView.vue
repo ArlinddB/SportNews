@@ -21,9 +21,9 @@ export default {
         this.errors.title.push("Title should be at least 3 characters")
         return;
       }
-      this.$store.dispatch("createCategory", { ...this.newCategory });
+      this.$store.dispatch("category/createCategory", { ...this.newCategory });
       this.newCategory.title = "";
-      this.$router.back()
+      this.$router.push('/category')
     },
   },
 };

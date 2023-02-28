@@ -2,10 +2,13 @@
 import { mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["category", "isLoading"]),
+    ...mapGetters({
+      category: 'category/category',
+      isLoading: 'category/isLoading'
+    }),
   },
   mounted() {
-    this.$store.dispatch("getById", this.$route.params.id);
+    this.$store.dispatch("category/getById", this.$route.params.id);
   },
 };
 </script>

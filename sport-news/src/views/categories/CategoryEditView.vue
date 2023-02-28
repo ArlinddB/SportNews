@@ -9,10 +9,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["category"]),
+    ...mapGetters({
+      category: 'category/category'
+    }),
   },
   mounted() {
-    this.$store.dispatch("getById", this.$route.params.id);
+    this.$store.dispatch("category/getById", this.$route.params.id);
   },
   methods: {
     async handleUpdateCategory() {
@@ -25,9 +27,8 @@ export default {
         this.errors.title.push("Title should be at least 3 characters")
         return;
       }
-      this.$store.dispatch("editCategory", {...this.category} );
-      this.$router.back();
-      // .push('/category')
+      this.$store.dispatch("category/editCategory", {...this.category} );
+      this.$router.push('/category')
     },
   },
 };

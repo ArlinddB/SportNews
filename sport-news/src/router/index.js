@@ -70,6 +70,21 @@ const routes = [
       ]
     },
     {
+      path: '/posts',
+      name: 'posts',
+      children: [
+        {
+          name: 'posts-list',
+          path: '',
+          meta: { title: 'Posts' },
+          component: () => 
+            import(
+              '../views/posts/PostsList.vue'
+            )
+        },
+      ]
+    },
+    {
       path: '/NotFound',
       name: '404',
       meta: { title: 'Not Found' },

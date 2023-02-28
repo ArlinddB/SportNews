@@ -15,30 +15,30 @@ export default {
   },
   computed: {
     ...mapGetters({
-      paginatedCategories: 'category/paginatedCategories',
-      allCategories: 'category/allCategories',
-      isLoading: 'category/isLoading'
+      paginatedPosts: 'post/paginatedPosts',
+      allPosts: 'post/allPosts',
+      isLoading: 'post/isLoading'
     }),
     filteredList() {
       if(this.search){
-        return this.allCategories.filter((c) =>
+        return this.allPosts.filter((c) =>
           c?.title?.toLowerCase().includes(this.search.toLowerCase())
         );
       }
-      return this.paginatedCategories
+      return this.paginatedPosts
     },
   },
   methods: {
-    handleDeleteCategory(categoryId) {
-      this.$store.dispatch("category/deleteCategory", categoryId);
+    handleDeletePost(postId) {
+      this.$store.dispatch("post/deletePost", postId);
     },
     clickCallback() {
       const params = this.getRequestParams(
         this.page,
         this.pageSize,
       );
-      this.$store.dispatch("category/fetchCategories", params);
-      axios.get(`http://localhost:4000/categories?limit=0`).then((res) => {
+      this.$store.dispatch("post/fetchPosts", params);
+      axios.get(`http://localhost:4000/posts?limit=0`).then((res) => {
         const { list } = res.data;
 
         this.count = list.length;
@@ -89,7 +89,7 @@ export default {
     <div v-if="isLoading">
       <span class="loader"></span>
     </div>
-    <div v-if="!isLoading" class="container max-w-2xl mx-auto px-4 sm:px-8">
+    <div v-if="!isLoading" class="container max-w-7xl mx-auto px-4 sm:px-8">
       <div class="py-8 -mx-4 sm:-mx-8 px-4 sm:px-8 overflow-x-auto">
         <div class="pt-2 pb-6 flex justify-between">
           <router-link
@@ -111,11 +111,11 @@ export default {
               duration-150
               ease-in-out
             "
-            to="/category/create"
-            >Add new Category
+            to=""
+            >Add new Post
           </router-link>
           <div
-            v-if="paginatedCategories"
+            v-if="paginatedPosts"
             class="
               w-auto
               flex
@@ -180,12 +180,46 @@ export default {
                     tracking-wider
                   "
                 >
+                  Content
+                </th>
+                <th
+                  class="
+                    px-5
+                    py-3
+                    border-b-2 border-zinc-400
+                    bg-gray-50
+                    dark:bg-gray-900
+                    text-left text-xs
+                    font-semibold
+                    text-zinc-700
+                    dark:text-zinc-300
+                    uppercase
+                    tracking-wider
+                  "
+                >
+                  Image
+                </th>
+                <th
+                  class="
+                    px-5
+                    py-3
+                    border-b-2 border-zinc-400
+                    bg-gray-50
+                    dark:bg-gray-900
+                    text-left text-xs
+                    font-semibold
+                    text-zinc-700
+                    dark:text-zinc-300
+                    uppercase
+                    tracking-wider
+                  "
+                >
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="category in this.filteredList" :key="category._id">
+              <tr v-for="post in this.filteredList" :key="post._id">
                 <td
                   style="width: 250px;"
                   class="
@@ -200,7 +234,39 @@ export default {
                     break-all
                   "
                 >
-                  {{ category.title }}
+                  {{ post.title }}
+                </td>
+                <td
+                  style="width: 250px;"
+                  class="
+                    px-5
+                    py-5
+                    border-t border-zinc-400
+                    bg-gray-50
+                    dark:bg-gray-900
+                    text-zinc-700
+                    dark:text-zinc-300
+                    text-sm
+                    break-all
+                  "
+                >
+                  {{ post.content }}
+                </td>
+                <td
+                  style="width: 250px;"
+                  class="
+                    px-5
+                    py-5
+                    border-t border-zinc-400
+                    bg-gray-50
+                    dark:bg-gray-900
+                    text-zinc-700
+                    dark:text-zinc-300
+                    text-sm
+                    break-all
+                  "
+                >
+                  {{ post.img }}
                 </td>
                 <td
                   class="
@@ -235,7 +301,7 @@ export default {
                       ease-in-out
                       m-1
                     "
-                    :to="`/category/edit/${category._id}`"
+                    to=""
                     ><i class="fa-solid fa-pen mr-2"></i>Edit</router-link
                   >
                   <a
@@ -263,7 +329,7 @@ export default {
                       m-1
                       cursor-pointer
                     "
-                    @click="handleDeleteCategory(category._id)"
+                    @click="handleDeletePost(post._id)"
                     ><i class="fa-solid fa-trash mr-2"></i>Delete</a
                   >
                   <router-link
@@ -285,7 +351,7 @@ export default {
                       ease-in-out
                       m-1
                     "
-                    :to="`/category/details/${category._id}`"
+                    to=""
                     ><i class="fa-solid fa-eye mr-2"></i>Details</router-link
                   >
                 </td>
@@ -294,7 +360,7 @@ export default {
           </table>
         </div>
       </div>      
-      <div v-if="!search && paginatedCategories.length" class="my-10 flex">
+      <div v-if="!search && paginatedPosts.length" class="my-10 flex">
         <div class="mb-3 flex flex-col text-zinc-800 dark:text-zinc-300">
           Items per Page:
           <select v-model="pageSize" @change="handlePageSizeChange($event)" class="bg-transparent border-b outline-none">

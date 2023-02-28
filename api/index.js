@@ -8,6 +8,7 @@ import {
 } from "./config";
 import cors from'cors';
 import categoryRouter from "./routes/categoryRoute";
+import postRouter from "./routes/postRoute";
 
 
 mongoose.connect(`${MONGO_CONNECTION_URI}:${MONGO_DB_PORT}/${MONGO_DB_NAME}`).then(() => {
@@ -24,6 +25,8 @@ mongoose.connect(`${MONGO_CONNECTION_URI}:${MONGO_DB_PORT}/${MONGO_DB_NAME}`).th
     app.use(express.json());
 
     app.use('/categories', categoryRouter);
+
+    app.use('/posts', postRouter)
     
     app.listen(API_PORT, () => {
       console.log(`Server Started at: ${API_PORT}`);
