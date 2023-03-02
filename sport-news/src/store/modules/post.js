@@ -7,6 +7,7 @@ export default {
     post: [],
     allPosts: [],
     paginatedPosts: [],
+    postsByCategory: [],
     isLoading: null,
   },
 
@@ -21,6 +22,7 @@ export default {
     allPosts: (state) => state.allPosts,
     paginatedPosts: (state) => state.paginatedPosts,
     isLoading: (state) => state.isLoading,
+    postsByCategory:(state) => state.postsByCategory 
   },
 
   actions: {
@@ -73,6 +75,18 @@ export default {
 
       commit("removePostById", postId);
     },
+    async postsByCategory({ commit }, category){
+      commit('setIsLoading', true);
+
+      const res = await axios.get(`${process.env.VUE_APP_API}posts/${category}`)
+
+      const { data } = res;
+
+      commit('setPostsByCategory', data)
+
+      commit('setIsLoading', false)
+
+    }
   },
 
   mutations: {
@@ -97,6 +111,9 @@ export default {
         (post) => post._id !== postId
       );
       state.allPosts = state.allPosts.filter((post) => post._id !== postId);
+    },
+    setPostsByCategory(state, posts){
+      state.postsByCategory = posts;
     },
     setIsLoading(state, isLoading) {
       state.isLoading = isLoading;

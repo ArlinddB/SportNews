@@ -110,14 +110,14 @@
               class="py-2 mt-2 bg-indigo-900 rounded-md shadow-xl lg:absolute lg:right-0 w-44"
             >
               <router-link
-                to="/soccer/news"
+                to="/football/news"
                 class="block px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
               >
                 News
               </router-link>
 
               <router-link
-                to="/soccer/scores"
+                to="/football/scores"
                 class="block px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
               >
                 Scores

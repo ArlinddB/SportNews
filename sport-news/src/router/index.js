@@ -89,7 +89,7 @@ const routes = [
           meta: { title: 'Scores' },
           component: () => 
             import(
-              '../views/fooball/scores/scores.vue'
+              '../views/football/scores/scores.vue'
             )
         }
       ]

@@ -20,6 +20,18 @@ const controller = {
       res.json("Error while getting posts: " + error.message)
     }
   },
+  getByCategory: async (req, res) => {
+    try { 
+      const category = new RegExp(req.params.category, 'i');
+      
+      const list = await postModel.find({ category: category})
+
+      return res.json(list.reverse())
+
+    } catch (error) {
+      res.json("Error while getting posts: " + error.message)
+    }
+  },
   find: async (req, res) => {
     try {
       const post = await postModel.findOne({

@@ -12,12 +12,12 @@
           <h2 class="text-2xl font-bold text-zinc-700 dark:text-zinc-300">
             {{ post.title }}
           </h2>
-          <p class="text-zinc-400 dark:text-zinc-500 mt-2">{{ post.created_at }}</p>
           <div class="mt-4">
             <p class="text-zinc-700 dark:text-zinc-300">{{ post.content }}</p>
           </div>
-          <div class="mt-4">
-            <p class="text-zinc-700 dark:text-zinc-300">{{ category.title }}</p>
+          <div class="flex mt-4 gap-4">
+            <p class="text-zinc-400 dark:text-zinc-500 mt-2">{{ post.category }}</p>
+            <p class="text-zinc-400 dark:text-zinc-500 mt-2">{{ post.created_at }}</p>
           </div>
         </div>
       </div>
@@ -51,12 +51,10 @@ export default {
     ...mapGetters({
         post: 'post/post',
         isLoading: 'post/isLoading',
-        category: 'category/category'
     }),
   },
   mounted() {
     this.$store.dispatch("post/getById", this.$route.params.id);
-    this.$store.dispatch('category/getById', this.post.category)
   },
 };
 </script>

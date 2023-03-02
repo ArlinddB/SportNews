@@ -90,7 +90,7 @@ export default {
     <div v-if="isLoading">
       <span class="loader"></span>
     </div>
-    <div v-if="!isLoading" class="container max-w-full mx-auto px-4 sm:px-8">
+    <div v-if="!isLoading" class="container max-w-full                                                                                   mx-auto px-4 sm:px-8">
       <div class="py-8 -mx-4 sm:-mx-8 px-4 sm:px-8 overflow-x-auto">
         <div class="pt-2 pb-6 flex justify-between">
           <router-link
@@ -146,7 +146,8 @@ export default {
         <div
           class="inline-block min-w-full shadow-md rounded-lg overflow-hidden"
         >
-          <table class="min-w-full leading-normal">
+          <table class="min-w-full leading-normal bg-gray-50
+                    dark:bg-gray-900">
             <thead>
               <tr>
                 <th
@@ -254,8 +255,7 @@ export default {
                 >
                   {{ post.title }}
                 </td>
-                <td
-                  style="width: 250px;"
+                <td                  
                   class="
                     px-5
                     py-5
@@ -265,7 +265,14 @@ export default {
                     text-zinc-700
                     dark:text-zinc-300
                     text-sm
+                    pb-1
                     break-all
+                  "
+                  style="width: 250px;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 6;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
                   "
                 >
                   {{ post.content }}
