@@ -58,17 +58,43 @@ const routes = [
             ),
             params: true,
         },
+      ]
+    },
+    {
+      path: '/register',
+      name: 'register',
+      meta: { title: 'Register' },
+      component:
+      () => import(
+        '../views/Register.vue'
+      )
+    },
+
+    {
+      path: '/football',
+      name: 'football',
+      children: [
         {
-          path: '/register',
-          name: 'register',
-          meta: { title: 'Register' },
-          component:
-          () => import(
-            '../views/Register.vue'
-          )
+          name: 'news-list',
+          path: 'news',
+          meta: { title: 'News' },
+          component: () => 
+            import(
+              '../views/football/news/newsList.vue'
+            )
+        },
+        {
+          name: 'scores-list',
+          path: 'scores',
+          meta: { title: 'Scores' },
+          component: () => 
+            import(
+              '../views/fooball/scores/scores.vue'
+            )
         }
       ]
     },
+   
     {
       path: '/posts',
       name: 'posts',
