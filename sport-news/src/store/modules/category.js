@@ -25,15 +25,18 @@ export default {
       );
       const paginatedCategories = await res.data.list;
 
-      const res1 = await axios.get(
-        `${process.env.VUE_APP_API}categories?limit=0`
-      );
-      const allCategories = await res1.data.list;
-
       commit("setPaginatedCategories", paginatedCategories);
-      commit("setAllCategories", allCategories);
 
       commit("setIsLoading", false);
+    },
+    async fetchAllCategories({ commit }){
+
+      const res = await axios.get(
+        `${process.env.VUE_APP_API}categories?limit=0`
+      );
+      const allCategories = await res.data.list;
+
+      commit("setAllCategories", allCategories);
     },
     async getById({ commit }, id) {
       commit("setIsLoading", true);

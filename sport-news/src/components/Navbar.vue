@@ -107,7 +107,7 @@
               </router-link>
 
               <router-link
-                to="/posts"
+                to="/posts/list"
                 class="
                   block
                   px-4
