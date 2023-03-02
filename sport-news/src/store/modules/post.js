@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment/moment";
 
 export default {
   namespaced: true,
@@ -10,7 +11,13 @@ export default {
   },
 
   getters: {
-    post: (state) => state.post,
+    post: (state) => {
+      const post = state.post
+      if(post){
+        post.created_at = moment(post.created_at).format('MMM DD YYYY')
+      }
+      return post;
+    },
     allPosts: (state) => state.allPosts,
     paginatedPosts: (state) => state.paginatedPosts,
     isLoading: (state) => state.isLoading,
@@ -25,14 +32,15 @@ export default {
       );
       const paginatedPosts = response.data.list;
 
+      commit("setPaginatedPosts", paginatedPosts);
+
+      commit("setIsLoading", false);
+    },
+    async fetchAllPosts( { commit } ){
       const all = await axios.get(`${process.env.VUE_APP_API}posts?limit=0`);
       const allPosts = all.data.list;
 
-      commit("setPaginatedPosts", paginatedPosts);
-
       commit("setAllPosts", allPosts);
-
-      commit("setIsLoading", false);
     },
     async getById({ commit }, id) {
       commit("setIsLoading", true);
@@ -45,6 +53,7 @@ export default {
       commit("setIsLoading", false);
     },
     async createPost({ commit }, post) {
+      console.log("Post " + post.category);
       const res = await axios.post(`${process.env.VUE_APP_API}posts`, post);
 
       const newPost = await res.data;

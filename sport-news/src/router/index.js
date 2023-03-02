@@ -101,11 +101,47 @@ const routes = [
       children: [
         {
           name: 'posts-list',
-          path: '',
+          path: 'list',
           meta: { title: 'Posts' },
           component: () => 
             import(
               '../views/posts/PostsList.vue'
+            )
+        },
+        {
+          name: 'posts-create',
+          path: 'create',
+          meta: { title: 'Create' },
+          component: () => 
+            import(
+              '../views/posts/PostsCreate.vue'
+            )
+        },
+        {
+          name: 'posts-edit',
+          path: 'edit/:id',
+          meta: { title: 'Edit' },
+          component: () => 
+            import(
+              '../views/posts/PostsEdit.vue'
+            )
+        },
+        {
+          name: 'posts-details',
+          path: 'details/:id',
+          meta: { title: 'Details' },
+          component: () => 
+            import(
+              '../views/posts/PostsDetails.vue'
+            )
+        },
+        {
+          name: 'posts-page',
+          path: ':id',
+          meta: { title: 'Post' },
+          component: () => 
+            import(
+              '../views/posts/PostsPage.vue'
             )
         },
       ]

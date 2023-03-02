@@ -68,8 +68,14 @@
               </router-link>
 
               <router-link
-                to="/posts"
-                class="block px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
+                to="/posts/list"
+                class="
+                  block
+                  px-4
+                  py-2
+                  text-sm text-zinc-100
+                  hover:text-white hover:bg-indigo-400
+                "
               >
                 Posts
               </router-link>

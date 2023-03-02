@@ -17,7 +17,7 @@ export default {
     ...mapGetters({
       paginatedPosts: 'post/paginatedPosts',
       allPosts: 'post/allPosts',
-      isLoading: 'post/isLoading'
+      isLoading: 'post/isLoading',
     }),
     filteredList() {
       if(this.search){
@@ -38,6 +38,7 @@ export default {
         this.pageSize,
       );
       this.$store.dispatch("post/fetchPosts", params);
+
       axios.get(`http://localhost:4000/posts?limit=0`).then((res) => {
         const { list } = res.data;
 
@@ -89,7 +90,7 @@ export default {
     <div v-if="isLoading">
       <span class="loader"></span>
     </div>
-    <div v-if="!isLoading" class="container max-w-7xl mx-auto px-4 sm:px-8">
+    <div v-if="!isLoading" class="container max-w-full mx-auto px-4 sm:px-8">
       <div class="py-8 -mx-4 sm:-mx-8 px-4 sm:px-8 overflow-x-auto">
         <div class="pt-2 pb-6 flex justify-between">
           <router-link
@@ -111,7 +112,7 @@ export default {
               duration-150
               ease-in-out
             "
-            to=""
+            to="/posts/create"
             >Add new Post
           </router-link>
           <div
@@ -214,6 +215,23 @@ export default {
                     tracking-wider
                   "
                 >
+                  Category
+                </th>
+                <th
+                  class="
+                    px-5
+                    py-3
+                    border-b-2 border-zinc-400
+                    bg-gray-50
+                    dark:bg-gray-900
+                    text-left text-xs
+                    font-semibold
+                    text-zinc-700
+                    dark:text-zinc-300
+                    uppercase
+                    tracking-wider
+                  "
+                >
                   Actions
                 </th>
               </tr>
@@ -269,6 +287,22 @@ export default {
                   {{ post.img }}
                 </td>
                 <td
+                  style="width: 250px;"
+                  class="
+                    px-5
+                    py-5
+                    border-t border-zinc-400
+                    bg-gray-50
+                    dark:bg-gray-900
+                    text-zinc-700
+                    dark:text-zinc-300
+                    text-sm
+                    break-all
+                  "
+                >
+                  {{ post.category }}
+                </td>
+                <td
                   class="
                     px-5
                     py-5
@@ -301,7 +335,7 @@ export default {
                       ease-in-out
                       m-1
                     "
-                    to=""
+                    :to="`/posts/edit/${post._id}`"
                     ><i class="fa-solid fa-pen mr-2"></i>Edit</router-link
                   >
                   <a
@@ -351,7 +385,7 @@ export default {
                       ease-in-out
                       m-1
                     "
-                    to=""
+                    :to="`/posts/details/${post._id}`"
                     ><i class="fa-solid fa-eye mr-2"></i>Details</router-link
                   >
                 </td>
