@@ -6,7 +6,7 @@ export default {
         errors: {
         title: [],
         content: [],
-        img: []
+        img: [],
       },
     }
   },

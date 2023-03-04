@@ -1,5 +1,7 @@
 <script>
+import axios from 'axios';
 import { mapGetters } from "vuex";
+
 export default {
   computed: {
     ...mapGetters({
@@ -14,15 +16,15 @@ export default {
 </script>
 
 <template>
-  <div class="min-h-[79vh]">
+  <div class="min-h-[79vh] flex justify-center items-center">
     <div v-if="isLoading">
-      <h1>Loading...</h1>
+      <span class="loader"></span>
     </div>
     <div v-if="!isLoading" class="p-0 sm:p-12">
       <div
         class="
           mx-auto
-          max-w-md
+          w-[28rem]
           mt-8
           px-6
           py-12

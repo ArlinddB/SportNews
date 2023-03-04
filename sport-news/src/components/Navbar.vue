@@ -33,98 +33,8 @@
         <li class="text-zinc-100 hover:text-white">
           <router-link to="/">Home</router-link>
         </li>
-        <li>
-          <div class="relative">
-            <!-- Dropdown toggle button -->
-            <button
-              @click="show = !show"
-              class="flex items-center text-zinc-100 hover:text-white rounded-md focus:outline-none"
-            >
-              <span class="mr-4 text-zinc-100 hover:text-white">Managment</span>
-              <svg
-                class="w-5 h-5 text-zinc-100 hover:text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-
-            <!-- Dropdown menu -->
-            <div
-              v-show="show"
-              class="py-2 mt-2 bg-indigo-900 rounded-md shadow-xl lg:absolute lg:right-0 w-44"
-            >
-              <router-link
-                to="/category"
-                class="block px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
-              >
-                Categories
-              </router-link>
-
-              <router-link
-                to="/posts/list"
-                class="
-                  block
-                  px-4
-                  py-2
-                  text-sm text-zinc-100
-                  hover:text-white hover:bg-indigo-400
-                "
-              >
-                Posts
-              </router-link>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="relative">
-            <!-- Dropdown toggle button -->
-            <button
-              @click="show1 = !show1"
-              class="flex items-center text-zinc-100 hover:text-white rounded-md focus:outline-none"
-            >
-              <span class="mr-4 text-zinc-100 hover:text-white">Football</span>
-              <svg
-                class="w-5 h-5 text-zinc-100 hover:text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-
-            <!-- Dropdown menu -->
-            <div
-              v-show="show1"
-              class="py-2 mt-2 bg-indigo-900 rounded-md shadow-xl lg:absolute lg:right-0 w-44"
-            >
-              <router-link
-                to="/football/news"
-                class="block px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
-              >
-                News
-              </router-link>
-
-              <router-link
-                to="/football/scores"
-                class="block px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
-              >
-                Scores
-              </router-link>
-            </div>
-          </div>
-        </li>
+        <Dropdown title="Managment" :options="managment" />
+        <Dropdown title="News" :options="categories" />
         <li>
           <router-link
             to="/login"
@@ -155,8 +65,34 @@
 <script>
 import { ref } from "vue";
 import { useDark, useToggle } from "@vueuse/core";
+import Dropdown from "./reusable/Dropdown.vue";
+import { mapGetters } from 'vuex';
 
 export default {
+  name: "NavBar",
+  components:{
+    Dropdown
+  },
+  data () {
+    return {
+      categories: [
+        {
+          title: 'Football',
+        },
+        {
+          title: 'Basketball',
+        },
+      ],
+      managment: [
+        {
+          title: 'Categories',
+        },
+        {
+          title: 'Posts',
+        },
+      ]
+    }
+  },
   setup() {
     let showMenu = ref(false);
     let show = ref(false);
@@ -168,6 +104,5 @@ export default {
 
     return { showMenu, show, show1, toggleNav, isDark, toggleDark };
   },
-  name: "NavBar",
 };
 </script>

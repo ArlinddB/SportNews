@@ -106,7 +106,7 @@ export default {
               hover:bg-gray-700 hover:shadow-lg
               focus:outline-none
             "
-            to="/category"
+            :to="{name: 'categories-list'}"
           >
             <i class="fa-solid fa-angle-left hvr-icon mr-2"></i>
             Back to list

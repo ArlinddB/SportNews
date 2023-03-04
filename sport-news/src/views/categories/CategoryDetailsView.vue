@@ -14,16 +14,16 @@ export default {
 </script>
 
 <template>
-  <div class="min-h-[79vh]">
+  <div class="min-h-[79vh] flex justify-center items-center">
     <div v-if="isLoading">
-      <h1>Loading...</h1>
+      <span class="loader"></span>
     </div>
     <div v-if="!isLoading" class="p-0 sm:p-12">
       <div
         class="
           mx-auto
-          max-w-md
           mt-8
+          w-[28rem]
           px-6
           py-12
           bg-gray-50
@@ -75,7 +75,7 @@ export default {
 
           <div class="flex justify-between">
             <router-link
-              to="/category"
+              :to="{name: 'categories-list'}"
               class="
                 hvr-icon-back
                 px-4

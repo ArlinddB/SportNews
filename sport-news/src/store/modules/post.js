@@ -16,6 +16,7 @@ export default {
       const post = state.post
       if(post){
         post.created_at = moment(post.created_at).format('MMM DD YYYY')
+        post.updated_at = moment(post.updated_at).format('MMM DD YYYY')
       }
       return post;
     },
@@ -55,7 +56,7 @@ export default {
       commit("setIsLoading", false);
     },
     async createPost({ commit }, post) {
-      console.log("Post " + post.category);
+
       const res = await axios.post(`${process.env.VUE_APP_API}posts`, post);
 
       const newPost = await res.data;
@@ -78,7 +79,7 @@ export default {
     async postsByCategory({ commit }, category){
       commit('setIsLoading', true);
 
-      const res = await axios.get(`${process.env.VUE_APP_API}posts/${category}`)
+      const res = await axios.get(`${process.env.VUE_APP_API}posts/postByCategory/${category}`)
 
       const { data } = res;
 

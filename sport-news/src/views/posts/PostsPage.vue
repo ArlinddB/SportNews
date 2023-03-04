@@ -46,12 +46,22 @@
   
 <script>
 import { mapGetters } from "vuex";
+import axios from 'axios';
+
 export default {
   computed: {
     ...mapGetters({
         post: 'post/post',
         isLoading: 'post/isLoading',
     }),
+  },
+  async created(){
+    try {
+        // Increment the clicks for this post
+        await axios.put(`${process.env.VUE_APP_API}posts/${this.$route.params.id}/incrementClicks`);
+      } catch (error) {
+        console.error(error);
+      }
   },
   mounted() {
     this.$store.dispatch("post/getById", this.$route.params.id);

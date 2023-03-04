@@ -95,7 +95,7 @@ export default {
 
         <div class="flex justify-between">
           <router-link
-            to="/category"
+            :to="{name: 'categories-list'}"
             class="
               hvr-icon-back
               px-4

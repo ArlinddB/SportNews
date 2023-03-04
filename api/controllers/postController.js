@@ -39,12 +39,55 @@ const controller = {
       });
 
       if (post == null) return res.json(ReasonPhrases.NOT_FOUND);
+
       return res.json(post);
     } catch (error) {
       console.error(ReasonPhrases.NOT_FOUND);
       return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
     }
+  },  
+  incrementClicks: async (req, res) => {
+    try {
+      const post = await postModel.findById(req.params.postId);
+  
+      if (!post) {
+        return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
+      }
+  
+      post.clicks += 1;
+      await post.save();
+  
+      return res.json(post);
+    } catch (error) {
+      console.error(error);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(ReasonPhrases.INTERNAL_SERVER_ERROR);
+    }
   },
+  // find: async (req, res) => {
+  //   try {
+  //     const post = await postModel.findOne({
+  //       _id: req.params.postId,
+  //     });
+  
+  //     if (post == null) {
+  //       return res.json(ReasonPhrases.NOT_FOUND);
+  //     }
+  
+  //     // Check if the incrementClicks query parameter is present
+  //     const incrementClicks = req.query.incrementClicks === 'true';
+  
+  //     // Increment the clicks field if the incrementClicks parameter is true
+  //     if (incrementClicks) {
+  //       post.clicks += 1;
+  //       await post.save();
+  //     }
+  
+  //     return res.json(post);
+  //   } catch (error) {
+  //     console.error(ReasonPhrases.NOT_FOUND);
+  //     return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
+  //   }
+  // },
   create: async (req, res) => {
     const validationResult = createPostSchema.validate(req.body);
     
@@ -56,6 +99,7 @@ const controller = {
     }
 
     const newPost = new postModel(validationResult.value);
+    newPost.created_at = new Date()
 
     try {
       await newPost.save();
@@ -79,15 +123,28 @@ const controller = {
     }
 
     try {
-      await postModel.updateOne({ _id: req.params.postId }, req.body);
-
-      const updatedPost = await postModel.find({
+      const post = await postModel.find({
         _id: req.params.postId,
       });
 
-      if(updatedPost == null){
-        console.log("null");
+      if(post == null){
+        console.error("null");
+        return;
       }
+
+      const a = post.created_at
+
+      const update = {
+        ...req.body,
+        updated_at: new Date(),
+        created_at: a
+      };
+      
+      await postModel.updateOne({ _id: req.params.postId }, { $set: update});
+
+      const updatedPost = await postModel.find({
+        _id: req.params.postId,
+      });      
 
       return res.json(updatedPost);
     } catch (err) {
