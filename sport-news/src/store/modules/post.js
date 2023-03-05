@@ -8,6 +8,7 @@ export default {
     allPosts: [],
     paginatedPosts: [],
     postsByCategory: [],
+    mostClicked: [],
     isLoading: null,
   },
 
@@ -23,7 +24,8 @@ export default {
     allPosts: (state) => state.allPosts,
     paginatedPosts: (state) => state.paginatedPosts,
     isLoading: (state) => state.isLoading,
-    postsByCategory:(state) => state.postsByCategory 
+    postsByCategory:(state) => state.postsByCategory ,
+    mostClicked: (state) => state.mostClicked
   },
 
   actions: {
@@ -87,6 +89,13 @@ export default {
 
       commit('setIsLoading', false)
 
+    },
+    async mostClicked({ commit }){
+      const res = await axios.get(`${process.env.VUE_APP_API}posts/mostClicked`);
+
+      const { data } = res;
+
+      commit('setMostClicked', data);
     }
   },
 
@@ -115,6 +124,9 @@ export default {
     },
     setPostsByCategory(state, posts){
       state.postsByCategory = posts;
+    },
+    setMostClicked(state, posts){
+      state.mostClicked = posts
     },
     setIsLoading(state, isLoading) {
       state.isLoading = isLoading;

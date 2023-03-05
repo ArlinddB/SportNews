@@ -1,8 +1,8 @@
 <template>
   <div class="min-h-screen dark:bg-gray-800">
     <section class="mx-auto py-10">
-      <div class="flex flex-col md:flex-row">
-        <main class="w-full px-4">
+      <div class="flex flex-col lg:flex-row p-3 m-4">
+        <main class="w-full lg:pr-4">
           <h2 class="text-2xl dark:text-zinc-100 dark:hover:text-white p-4">
             Latest Headlines
           </h2>
@@ -10,25 +10,14 @@
             <post-item v-for="post in posts" :postData="post" :key="post._id" />
           </div>
         </main>
-        <aside class="w-full md:w-1/4 px-4">
+        <div class="w-full lg:w-1/4 px-4" v-if="mostClicked">
           <h2
             class="text-2xl text-center dark:text-zinc-100 dark:hover:text-white p-4"
           >
-            Top Stories
+            Top Posts
           </h2>
-          <ul class="mt-4 px-4 sm:px-0">
-            <li class="py-2 border-b border-gray-700">
-              <a class="dark:text-zinc-100 dark:hover:text-white" href="#"
-                >Story 1</a
-              >
-            </li>
-            <li class="py-2 border-b border-gray-700">
-              <a class="dark:text-zinc-100 dark:hover:text-white" href="#"
-                >Story 2</a
-              >
-            </li>
-          </ul>
-        </aside>
+          <aside-posts v-for="post in mostClicked" :key="post._id" :postData="post" />
+        </div>
       </div>
     </section>
   </div>      
@@ -37,18 +26,22 @@
 <script>
 import { mapGetters } from "vuex";
 import PostItem from '../components/reusable/PostItem.vue';
+import AsidePosts from "../components/reusable/AsidePosts.vue";
 
 export default {
   components: {
-    'post-item': PostItem
+    'post-item': PostItem,
+    'aside-posts': AsidePosts
   },  
   computed: {
     ...mapGetters({
       posts: "post/allPosts",
+      mostClicked: "post/mostClicked"
     }),
   },
   mounted() {
     this.$store.dispatch("post/fetchAllPosts");
+    this.$store.dispatch("post/mostClicked");
   },
 };
 </script>
