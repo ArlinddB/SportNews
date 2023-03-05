@@ -14,22 +14,20 @@ const controller = {
       const list = await postModel.find().skip(skipValue).limit(limitValue);
 
       return res.json({ page: page, list: list.reverse() });
-
     } catch (error) {
       console.error("Error while getting posts: " + error.message);
-      res.json("Error while getting posts: " + error.message)
+      res.json("Error while getting posts: " + error.message);
     }
   },
   getByCategory: async (req, res) => {
-    try { 
-      const category = new RegExp(req.params.category, 'i');
-      
-      const list = await postModel.find({ category: category})
+    try {
+      const category = new RegExp(req.params.category, "i");
 
-      return res.json(list.reverse())
+      const list = await postModel.find({ category: category });
 
+      return res.json(list.reverse());
     } catch (error) {
-      res.json("Error while getting posts: " + error.message)
+      res.json("Error while getting posts: " + error.message);
     }
   },
   find: async (req, res) => {
@@ -45,52 +43,54 @@ const controller = {
       console.error(ReasonPhrases.NOT_FOUND);
       return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
     }
-  },  
+  },
   incrementClicks: async (req, res) => {
     try {
       const post = await postModel.findById(req.params.postId);
-  
+
       if (!post) {
         return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
       }
-  
+
       post.clicks += 1;
       await post.save();
-  
+
       return res.json(post);
     } catch (error) {
       console.error(error);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(ReasonPhrases.INTERNAL_SERVER_ERROR);
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json(ReasonPhrases.INTERNAL_SERVER_ERROR);
     }
   },
-  // find: async (req, res) => {
-  //   try {
-  //     const post = await postModel.findOne({
-  //       _id: req.params.postId,
-  //     });
-  
-  //     if (post == null) {
-  //       return res.json(ReasonPhrases.NOT_FOUND);
-  //     }
-  
-  //     // Check if the incrementClicks query parameter is present
-  //     const incrementClicks = req.query.incrementClicks === 'true';
-  
-  //     // Increment the clicks field if the incrementClicks parameter is true
-  //     if (incrementClicks) {
-  //       post.clicks += 1;
-  //       await post.save();
-  //     }
-  
-  //     return res.json(post);
-  //   } catch (error) {
-  //     console.error(ReasonPhrases.NOT_FOUND);
-  //     return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
-  //   }
-  // },
+  mostClicked: async (req, res) => {
+    try {
+      const topPosts = await postModel.aggregate([
+        { $sort: { clicks: -1 } }, // sort posts by clicks in descending order
+        { $limit: 3 }, // limit the results to the top 3 posts
+      ]);
+
+      return res.json(topPosts);
+    } catch (error) {
+      return res.json(error.message);
+    }
+  },
+  similarPosts: async (req, res) => {
+    try {
+      const currentPost = await postModel.findOne({ _id: req.params.postId });
+      const recommendedPosts = await postModel
+        .find({ category: currentPost.category, _id: { $ne: currentPost._id } })
+        .limit(3);
+
+      return res.json(recommendedPosts);
+    } catch (err) {
+      console.error(err.message);
+      return [];
+    }
+  },
   create: async (req, res) => {
     const validationResult = createPostSchema.validate(req.body);
-    
+
     if (validationResult.error) {
       return res.status(StatusCodes.LENGTH_REQUIRED).json({
         message: ReasonPhrases.LENGTH_REQUIRED,
@@ -99,7 +99,7 @@ const controller = {
     }
 
     const newPost = new postModel(validationResult.value);
-    newPost.created_at = new Date()
+    newPost.created_at = new Date();
 
     try {
       await newPost.save();
@@ -127,24 +127,24 @@ const controller = {
         _id: req.params.postId,
       });
 
-      if(post == null){
+      if (post == null) {
         console.error("null");
         return;
       }
 
-      const a = post.created_at
+      const a = post.created_at;
 
       const update = {
         ...req.body,
         updated_at: new Date(),
-        created_at: a
+        created_at: a,
       };
-      
-      await postModel.updateOne({ _id: req.params.postId }, { $set: update});
+
+      await postModel.updateOne({ _id: req.params.postId }, { $set: update });
 
       const updatedPost = await postModel.find({
         _id: req.params.postId,
-      });      
+      });
 
       return res.json(updatedPost);
     } catch (err) {
@@ -159,7 +159,8 @@ const controller = {
       await postModel.deleteOne({ _id: postId });
       res.json({ deleted: true });
     } catch (err) {
-      return res.status(StatusCodes.NOT_FOUND)
+      return res
+        .status(StatusCodes.NOT_FOUND)
         .json({ message: ReasonPhrases.NOT_FOUND });
     }
   },

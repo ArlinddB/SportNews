@@ -3,6 +3,7 @@
     <div class="bg-slate-100 dark:bg-gray-900 rounded-lg shadow-lg p-6">
       <h3
         class="text-xl font-bold dark:text-zinc-100 dark:hover:text- mb-3"
+        :title="`${postData.title}`"
         style="
           display: -webkit-box;
           -webkit-line-clamp: 2;
