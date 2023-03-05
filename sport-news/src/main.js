@@ -5,6 +5,7 @@ import store from './store';
 import VueAwesomePaginate from "vue-awesome-paginate";
 import './assets/style.css';
 import './assets/tailwind.css'
+import './firebase';
 
 const app = createApp(App);
 

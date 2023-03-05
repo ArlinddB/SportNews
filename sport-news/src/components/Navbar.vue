@@ -9,6 +9,7 @@
           class="text-xl font-bold text-gray-100 md:text-2xl hover:text-white"
           >Logo
         </router-link>
+          <!-- <div v-if="this.$store.state.user.email">{{this.$store.state.user.email}}</div> -->
         <!-- Mobile menu button -->
         <div @click="toggleNav" class="flex md:hidden">
           <button
@@ -36,12 +37,18 @@
         <Dropdown title="Managment" :options="managment" />
         <Dropdown title="News" :options="categories" />
         <li>
-          <router-link
+          <router-link v-if="!this.$store.state.user.user"
             to="/login"
             class="inline-block px-4 py-2 bg-gray-700 dark:bg-blue-500 rounded-lg text-zinc-100 hover:text-white"
           >
             Login
           </router-link>
+          <button v-if="this.$store.state.user.user"
+            @click="handleLogOut"
+            class="inline-block px-4 py-2 bg-gray-700 dark:bg-blue-500 rounded-lg text-zinc-100 hover:text-white"
+          >
+            Log out
+          </button>
         </li>
         <button
           v-if="isDark"
@@ -66,7 +73,8 @@
 import { ref } from "vue";
 import { useDark, useToggle } from "@vueuse/core";
 import Dropdown from "./reusable/Dropdown.vue";
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex'
+import { getAuth, signOut } from 'firebase/auth';
 
 export default {
   name: "NavBar",
@@ -91,6 +99,15 @@ export default {
           title: 'Posts',
         },
       ]
+    }
+  },
+  computed: {
+        ...mapState({ user: 'user/user'}),
+  },
+  methods: {
+    async handleLogOut(){
+      const auth = getAuth();
+      await signOut(auth);
     }
   },
   setup() {

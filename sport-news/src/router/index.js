@@ -1,3 +1,4 @@
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -11,7 +12,7 @@ const routes = [
     path: "/login",
     name: "login",
     meta: { title: "Login" },
-    component: () => import("../views/Login.vue"),
+    component: () => import("../views/user/Login.vue"),
   },
   {
     path: "/categories",
@@ -49,7 +50,7 @@ const routes = [
     path: "/register",
     name: "register",
     meta: { title: "Register" },
-    component: () => import("../views/Register.vue"),
+    component: () => import("../views/user/Register.vue"),
   },
 
   {
@@ -125,7 +126,7 @@ const router = createRouter({
   routes,
 });
 
-const guestRouteNames = [];
+const guestRouteNames = ['login', 'register'];
 
 const routeNames = routes.flatMap((route) =>
   route.children
@@ -135,13 +136,16 @@ const routeNames = routes.flatMap((route) =>
 
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title + " - SportNews";
-  if (guestRouteNames.includes(to.name)) {
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) =>{
+  if (guestRouteNames.includes(to.name) && user) {
     next({ name: "home" });
   } else if (!routeNames.includes(to.name)) {
     next({ name: "404" });
   } else {
     next();
   }
+})
 });
 
 export default router;

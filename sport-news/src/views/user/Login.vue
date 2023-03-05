@@ -1,5 +1,5 @@
 <template>
-  <div>
+   <div>
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,0,0"
@@ -7,32 +7,21 @@
     <div class="min-h-[79vh]">
       <div class="pt-16">
         <div class="signup bg-gray-50 dark:bg-gray-900 shadow-md">
-          <form class="form1">
+          <form @submit.prevent="handleLogInUser" class="form1">
             <div
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
-                type="text"
-                placeholder="Username"
-                class="
-                  border-0
-                  outline-none
-                  focus:ring-0
-                  input-field
-                  text-zinc-700
-                  dark:text-zinc-300
-                "
+                v-model="email"
+                type="email"
+                placeholder="email"
+                class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
                 required
               />
               <span
-                class="
-                  material-symbols-outlined
-                  icon
-                  text-zinc-700
-                  dark:text-zinc-500
-                "
+                class="material-symbols-outlined icon text-zinc-700 dark:text-zinc-500"
               >
-                account_circle
+                mail
               </span>
             </div>
 
@@ -43,52 +32,25 @@
                 v-if="showPassword"
                 type="text"
                 placeholder="Password"
-                class="
-                  border-0
-                  outline-none
-                  focus:ring-0
-                  input-field
-                  text-zinc-700
-                  dark:text-zinc-300
-                "
+                class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
                 v-model="password"
               />
               <input
                 v-else
                 type="password"
                 placeholder="Password"
-                class="
-                  border-0
-                  outline-none
-                  focus:ring-0
-                  input-field
-                  text-zinc-700
-                  dark:text-zinc-300
-                "
+                class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
                 v-model="password"
               />
               <span
-                class="
-                  material-symbols-outlined
-                  icon
-                  text-zinc-700
-                  dark:text-zinc-500
-                "
+                class="material-symbols-outlined icon text-zinc-700 dark:text-zinc-500"
               >
                 key
               </span>
               <span>
                 <i
                   @click="toggleShow"
-                  class="
-                    fas
-                    text-zinc-700
-                    dark:text-zinc-400
-                    cursor-pointer
-                    absolute
-                    right-0
-                    bottom-4
-                  "
+                  class="fas text-zinc-700 dark:text-zinc-400 cursor-pointer absolute right-0 bottom-4"
                   :class="{
                     'fa-eye-slash': showPassword,
                     'fa-eye': !showPassword,
@@ -98,12 +60,10 @@
             </div>
             <p>
               Don't have an account?
-            <router-link to="/register">
-            Register
-            </router-link>
+              <router-link to="/register"> Register </router-link>
             </p>
 
-            <button type="submit" class="loginbtn">
+            <button class="loginbtn">
               Login
               <span class="material-symbols-outlined"> arrow_forward </span>
             </button>
@@ -115,7 +75,8 @@
     </div>
   </div>
 </template>
-<style scoped>
+
+<style scoped> 
 .signup {
   margin: auto;
   max-width: 460px;
@@ -205,21 +166,32 @@ input:focus ~ label {
 
 .signup p > a {
   color: #216ce7;
-  text-decoration: none;
+  text-decoration: none; 
 }
 </style>
-<script>
+
+ <script>
 export default {
   name: "login-view",
   data() {
     return {
+      email: "",
+      password: "",
       showPassword: false,
-      password: null,
+      user: null,
     };
   },
   methods: {
     toggleShow() {
       this.showPassword = !this.showPassword;
+    },
+    async handleLogInUser() {
+      this.$store.dispatch("user/logInUser", {
+        email: this.email,
+        password: this.password,
+      });
+      this.$router.push("/");
+      console.log("logged in");
     },
   },
 };

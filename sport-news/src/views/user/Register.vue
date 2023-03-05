@@ -7,11 +7,12 @@
     <div class="min-h-[79vh]">
       <div class="py-12">
         <div class="signup bg-gray-50 dark:bg-gray-900 shadow-md">
-          <form class="form1">
+          <form @:submit.prevent="handleRegisterUser" class="form1">
             <div
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
+                v-model="username"
                 type="text"
                 placeholder="Username"
                 class="
@@ -40,6 +41,7 @@
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
+                v-model="email"
                 type="text"
                 placeholder="Email"
                 class="
@@ -94,7 +96,7 @@
                   text-zinc-700
                   dark:text-zinc-300
                 "
-                v-model="Password"
+                v-model="password"
               />
               <span
                 class="
@@ -127,7 +129,7 @@
             </div>
 
 
-            <div
+            <!-- <div
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
@@ -186,9 +188,9 @@
                   }"
                 ></i>
               </span>
-            </div>
+            </div> -->
 
-            <button type="submit" class="loginbtn">
+            <button class="loginbtn"> 
               Register
               <span class="material-symbols-outlined"> arrow_forward </span>
             </button>
@@ -297,18 +299,29 @@ input:focus ~ label {
 }
 </style>
 <script>
+
 export default {
   name: "register-view",
   data() {
     return {
-      showPassword: false,
-      password: null,
+      username: '',
+      email: '',
+      password:'',
+      showPassword: false
     };
   },
   methods: {
     toggleShow() {
       this.showPassword = !this.showPassword;
     },
+    async handleRegisterUser(){
+      this.$store.dispatch('user/registerUser', {
+        name: this.username,
+        email: this.email,
+        password: this.password
+      })
+        this.$router.push ('/login');
+    }
   },
 };
 </script>
