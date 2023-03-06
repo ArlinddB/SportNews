@@ -66,14 +66,14 @@ const routes = [
     ],
   },
   {
-    path: "/scores",
-    name: "scores-list",
+    path: "/standings",
+    name: "standings-list",
     children: [
       {
-        name: "football-scores",
+        name: "football-standings",
         path: "football",
-        meta: { title: "Football Scores" },
-        component: () => import("../views/football/scores/scores.vue"),
+        meta: { title: "Football Standings" },
+        component: () => import("../views/football/standings/standings.vue"),
       },
     ],
   },

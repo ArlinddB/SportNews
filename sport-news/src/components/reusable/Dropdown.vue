@@ -25,6 +25,7 @@
         >
           <router-link v-if="title == 'News'" @click="toggleDropdown" :to="`/${title}/${option.title}`">{{ option.title }}</router-link>
           <router-link v-else-if="option.title == 'Posts'" @click="toggleDropdown" :to="{name: 'posts-list'}">{{ option.title }}</router-link>
+          <router-link v-else-if="title == 'Standings'" @click="toggleDropdown" :to="`/standings/${option.title}`">{{ option.title }}</router-link>
           <router-link v-else @click="toggleDropdown" :to="`/${option.title}`">{{ option.title }}</router-link>
         </li>
       </ul>

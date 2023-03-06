@@ -5,22 +5,36 @@ export default {
 
     state: {
         standingsByLeague: [],
+        isLoading: null
     },
     getters: {
         standingsByLeague: (state) => state.standingsByLeague,
+        isLoading: (state) => state.isLoading,
     },
     actions: {
-        async getStandingsByLeague ({ commit }){
-            const res = await axios.get(`https://apiv3.apifootball.com/?action=get_standings&league_id=152&APIkey=46fcda134232acc023b5b2e53dddb66096d9f8c7ae7e0b2eaeea7548d40fdf5e`)
+        async getStandingsByLeague ({ commit }, leagueId){
+            commit('setIsLoading', true);
+
+            const res = await axios.get(`${process.env.VUE_APP_FOOTBALL_API}?action=get_standings&league_id=${leagueId}&APIkey=${process.env.VUE_APP_FOOTBALL_API_KEY}`)
 
             const standings = res.data;
+            
+            if(standings.length == 0){
+                commit('setIsLoading', true);
+                return;
+            }
 
             commit('setStandingsByLeague', standings)
+            
+            commit('setIsLoading', false);
         }
     },
     mutations:{
         setStandingsByLeague(state, standings){
             state.standingsByLeague = standings;
+        },
+        setIsLoading(state, isLoading){
+            state.isLoading = isLoading;
         }
     }
 }

@@ -36,6 +36,7 @@
         </li>
         <Dropdown title="Managment" :options="managment" />
         <Dropdown title="News" :options="categories" />
+        <Dropdown title="Standings" :options="standings" />
         <li>
           <router-link v-if="!this.$store.state.user.user"
             to="/login"
@@ -97,6 +98,11 @@ export default {
         },
         {
           title: 'Posts',
+        },
+      ],
+      standings: [
+        {
+          title: 'Football',
         },
       ]
     }
