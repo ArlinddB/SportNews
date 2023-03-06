@@ -190,7 +190,7 @@ export default {
         email: this.email,
         password: this.password,
       });
-      this.$router.push("/");
+      this.$router.back();
       console.log("logged in");
     },
   },

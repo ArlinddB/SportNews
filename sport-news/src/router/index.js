@@ -126,7 +126,7 @@ const router = createRouter({
   routes,
 });
 
-const guestRouteNames = ['login', 'register'];
+const guestRouteNames = ["login", "register"];
 
 const routeNames = routes.flatMap((route) =>
   route.children
@@ -137,15 +137,17 @@ const routeNames = routes.flatMap((route) =>
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title + " - SportNews";
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) =>{
-  if (guestRouteNames.includes(to.name) && user) {
-    next({ name: "home" });
-  } else if (!routeNames.includes(to.name)) {
-    next({ name: "404" });
-  } else {
-    next();
-  }
-})
+  onAuthStateChanged(auth, (user) => {
+    if (guestRouteNames.includes(to.name) && user) {
+      next({ name: "home" });
+      return;
+    } else if (!routeNames.includes(to.name)) {
+      next({ name: "404" });
+    } else {
+      next();
+      return;
+    }
+  });
 });
 
 export default router;
