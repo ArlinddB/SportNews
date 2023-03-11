@@ -12,9 +12,9 @@
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
-                v-model="username"
+                v-model="name"
                 type="text"
-                placeholder="Username"
+                placeholder="Name"
                 class="
                   border-0
                   outline-none
@@ -304,7 +304,7 @@ export default {
   name: "register-view",
   data() {
     return {
-      username: '',
+      name: '',
       email: '',
       password:'',
       showPassword: false
@@ -316,7 +316,7 @@ export default {
     },
     async handleRegisterUser(){
       this.$store.dispatch('user/registerUser', {
-        name: this.username,
+        name: this.name,
         email: this.email,
         password: this.password
       })

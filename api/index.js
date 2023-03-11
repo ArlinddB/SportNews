@@ -10,6 +10,7 @@ import cors from'cors';
 import categoryRouter from "./routes/categoryRoute";
 import postRouter from "./routes/postRoute";
 import dashboardRouter from "./routes/dashboardRoute";
+import userRouter from "./routes/userRoute";
 
 
 mongoose.connect(`${MONGO_CONNECTION_URI}:${MONGO_DB_PORT}/${MONGO_DB_NAME}`).then(() => {
@@ -31,6 +32,8 @@ mongoose.connect(`${MONGO_CONNECTION_URI}:${MONGO_DB_PORT}/${MONGO_DB_NAME}`).th
 
     app.use('/dashboard', dashboardRouter)
     
+    app.use('/users', userRouter)
+     
     app.listen(API_PORT, () => {
       console.log(`Server Started at: ${API_PORT}`);
     });
