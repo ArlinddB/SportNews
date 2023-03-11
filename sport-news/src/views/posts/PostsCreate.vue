@@ -2,6 +2,7 @@
 import { mapGetters } from "vuex";
 
 export default {
+  components: {},
   data() {
     return {
       errors: {
@@ -15,6 +16,7 @@ export default {
         img: "",
         category: "",
       },
+      selectedOption: "Select a category",
     };
   },
   computed: {
@@ -45,8 +47,11 @@ export default {
         this.errors.img.push("Image is required");
         return;
       }
+
+      this.newPost.category = this.selectedOption.title;
+
       this.$store.dispatch("post/createPost", { ...this.newPost });
-      this.newPost.title = "";
+
       this.$router.push("/posts/list");
     },
   },
@@ -134,8 +139,8 @@ export default {
           </span>
         </div>
 
-        <div class="relative z-0 w-full mb-5">
-          <select
+        <div class="z-0 w-full mb-5">
+          <!-- <select
             class="pt-3 pb-2 block w-full px-0 mt-0 one-select bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:bg-transparent active:bg-transparent border-gray-200 text-zinc-700 dark:text-zinc-300"
             v-model="newPost.category"
           >
@@ -147,8 +152,16 @@ export default {
             >
               {{ category.title }}
             </option>
-          </select>
-          <span class="text-sm text-red-600"></span>
+          </select> -->
+
+          <v-select
+            v-model="selectedOption"
+            :options="allCategories"
+            :searchable="true"
+            label="title"
+            class="text-zinc-700 dark:text-zinc-300 select-dropdown"
+          />            
+
         </div>
 
         <div class="flex justify-between">
@@ -172,3 +185,11 @@ export default {
     </div>
   </div>
 </template>
+
+<style>
+@import "vue-select/dist/vue-select.css";
+
+.select-dropdown > div {
+  background-color: red;
+}
+</style>

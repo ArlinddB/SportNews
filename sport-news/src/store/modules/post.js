@@ -25,7 +25,17 @@ export default {
     paginatedPosts: (state) => state.paginatedPosts,
     isLoading: (state) => state.isLoading,
     postsByCategory:(state) => state.postsByCategory ,
-    mostClicked: (state) => state.mostClicked
+    mostClicked: (state) => {
+      const mostClicked = state.mostClicked;
+      if (mostClicked && mostClicked.length) {
+        return mostClicked.map(post => {
+          post.created_at = moment(post.created_at).format('MMM DD YYYY');
+          post.updated_at = moment(post.updated_at).format('MMM DD YYYY');
+          return post;
+        });
+      }
+      return mostClicked;
+    }
   },
 
   actions: {

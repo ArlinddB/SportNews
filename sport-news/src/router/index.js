@@ -114,6 +114,12 @@ const routes = [
     ],
   },
   {
+    path: "/dashboard",
+    name: "dashboard",
+    meta: { title: "Dashboard" },
+    component: () => import("../views/dashboard/DashboardView.vue"),
+  },
+  {
     path: "/NotFound",
     name: "404",
     meta: { title: "Not Found" },

@@ -3,6 +3,7 @@ import category from './modules/category'
 import post from './modules/post';
 import user from './modules/user';
 import standings from './modules/standings';
+import dashboard from './modules/dashboard';
 
 const store = createStore({
     modules: {
@@ -10,6 +11,7 @@ const store = createStore({
         post,
         user,
         standings,
+        dashboard,
     },
 });
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-      <NavBar v-if="$route.name!='404'" />
+      <NavBar v-if="$route.name!='404'" v-show="$route.name!='dashboard'" />
       <router-view  />
       <FooterComponent v-if="$route.name!='404'" />
   </div>
