@@ -1,13 +1,16 @@
-import { getAuth, createUserWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth'
 
+import { getAuth, createUserWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
 
-async function signUpUser(payload){
-    const {email, password, username} = payload;
+async function signupUser(payload) {
+    const { email, password, name } = payload;
+
     const auth = getAuth();
-    const { user } = await createUserWithEmailAndPassword(auth, email, password);      
-    await updateProfile(user, {displayName: username});
-    await signOut(auth);
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    const user = result.user;
 
+    await updateProfile(user, { displayName: name });
+
+    await signOut(auth);
 }
 
-export default signUpUser;
+export default signupUser;

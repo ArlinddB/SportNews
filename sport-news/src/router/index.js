@@ -114,6 +114,18 @@ const routes = [
     ],
   },
   {
+    path: "/users",
+    name: "users",
+    children: [
+      {
+        name: "users-list",
+        path: "list",
+        meta: { title: "Users" },
+        component: () => import("../views/user/UserList.vue"),
+      },
+    ],
+  },
+  {
     path: "/NotFound",
     name: "404",
     meta: { title: "Not Found" },
