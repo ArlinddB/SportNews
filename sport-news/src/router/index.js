@@ -127,9 +127,38 @@ const routes = [
   },
   {
     path: "/dashboard",
-    name: "dashboard",
-    meta: { title: "Dashboard" },
-    component: () => import("../views/dashboard/DashboardView.vue"),
+    children: [
+      {
+        name: "dashboard",
+        path: "",
+        meta: { title: "Dashboard" },
+        component: () => import("../views/dashboard/DashboardView.vue"),
+      },
+      {
+        name: "categories-dashboard",
+        path: "categories",
+        meta: { title: "Categories" },
+        component: () => import("../views/dashboard/categories/CategoriesList.vue"),
+      },
+      {
+        name: "categories-create-dashboard",
+        path: "categories/create",
+        meta: { title: "Create" },
+        component: () => import("../views/dashboard/categories/CategoriesCreate.vue"),
+      },
+      {
+        name: "categories-edit-dashboard",
+        path: "categories/edit/:id",
+        meta: { title: "Edit" },
+        component: () => import("../views/dashboard/categories/CategoriesEdit.vue"),
+      },
+      {
+        name: "categories-details-dashboard",
+        path: "categories/details/:id",
+        meta: { title: "Details" },
+        component: () => import("../views/dashboard/categories/CategoriesDetails.vue"),
+      },
+    ]
   },
   {
     path: "/NotFound",

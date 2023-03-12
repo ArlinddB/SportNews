@@ -9,7 +9,7 @@
           class="text-xl font-bold text-gray-100 md:text-2xl hover:text-white"
           >Logo
         </router-link>
-          <!-- <div v-if="this.$store.state.user.email">{{this.$store.state.user.email}}</div> -->
+        <!-- <div v-if="this.$store.state.user.email">{{this.$store.state.user.email}}</div> -->
         <!-- Mobile menu button -->
         <div @click="toggleNav" class="flex md:hidden">
           <button
@@ -38,18 +38,57 @@
         <Dropdown title="News" :options="categories" />
         <Dropdown title="Standings" :options="standings" />
         <li>
-          <router-link v-if="!this.$store.state.user.user"
+          <router-link
+            v-if="!this.$store.state.user.user"
             to="/login"
             class="inline-block px-4 py-2 bg-gray-700 dark:bg-blue-500 rounded-lg text-zinc-100 hover:text-white"
           >
             Login
           </router-link>
-          <button v-if="this.$store.state.user.user"
+          <!-- <button v-if="this.$store.state.user.user"
             @click="handleLogOut"
             class="inline-block px-4 py-2 bg-gray-700 dark:bg-blue-500 rounded-lg text-zinc-100 hover:text-white"
           >
-            Log out
-          </button>
+            {{ this.$store.state.user.user.displayName }}
+          </button> -->
+
+          <div class="relative" v-click-away="onClickAway" v-if="this.$store.state.user.user">
+            <button
+              @click="toggleDropdown"
+              class="font-semibold text-zinc-100 hover:text-white rounded-md focus:outline-none inline-flex items-center"
+            >
+              <span>{{ this.$store.state.user.user.displayName }}</span>
+              <svg
+                class="fill-current h-4 w-4"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M7 10l5 5 5-5z" />
+              </svg>
+            </button>
+            <div
+              v-if="open"
+              class="absolute z-50 py-2 bg-indigo-900 lg:absolute lg:right-0 w-[120px] rounded-md shadow-lg mt-2"
+            >
+              <ul>
+                <li
+                  @click="toggleDropdown"
+                  class="cursor-pointer px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
+                >
+                  Profile
+                </li>
+                <li
+                  @click="
+                    toggleDropdown();
+                    handleLogOut();
+                  "
+                  class="cursor-pointer px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
+                >
+                  Logout
+                </li>
+              </ul>
+            </div>
+          </div>
         </li>
         <button
           v-if="isDark"
@@ -74,47 +113,62 @@
 import { ref } from "vue";
 import { useDark, useToggle } from "@vueuse/core";
 import Dropdown from "./reusable/Dropdown.vue";
-import { mapState } from 'vuex'
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, signOut } from "firebase/auth";
+import { directive } from "vue3-click-away";
+import { mapGetters } from 'vuex';
+import { is } from "@babel/types";
+
 
 export default {
   name: "NavBar",
-  components:{
-    Dropdown
+  components: {
+    Dropdown,
   },
-  data () {
+  directives: {
+    ClickAway: directive,
+  },
+  data() {
     return {
       categories: [
         {
-          title: 'Football',
+          title: "Football",
         },
         {
-          title: 'Basketball',
+          title: "Basketball",
         },
       ],
       managment: [
         {
-          title: 'Categories',
+          title: "Categories",
         },
         {
-          title: 'Posts',
+          title: "Posts",
         },
       ],
       standings: [
         {
-          title: 'Football',
+          title: "Football",
         },
-      ]
-    }
+      ],
+      open: false,
+    };
   },
   computed: {
-        ...mapState({ user: 'user/user'}),
+    ...mapGetters({
+      user: 'user/user'
+    }),
   },
   methods: {
-    async handleLogOut(){
+    async handleLogOut() {
       const auth = getAuth();
       await signOut(auth);
-    }
+    },
+    onClickAway(event) {
+      this.open = false;
+    },
+    toggleDropdown() {
+      this.open = !this.open;
+    },
   },
   setup() {
     let showMenu = ref(false);

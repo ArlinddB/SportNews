@@ -189,6 +189,9 @@ input:focus ~ label {
 </style>
 
  <script>
+import { getAuth } from '@firebase/auth';
+const auth = getAuth();
+
 export default {
   name: "login-view",
   data() {
@@ -231,10 +234,6 @@ export default {
         } catch (error) {
           this.errorMessage = error.message;
         }
-        // if (this.errorMessage === "") {
-        //   this.$router.push({ name: "home" });
-        //   return;
-        // }
       }
     },
     onFocus() {
