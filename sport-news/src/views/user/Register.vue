@@ -15,6 +15,7 @@
                 v-model="name"
                 type="text"
                 placeholder="Name"
+                ref="nameInput"
                 class="
                   border-0
                   outline-none
@@ -35,15 +36,22 @@
               >
                 account_circle
               </span>
+              
             </div>
-
-              <div
+            <span
+                v-if="submitted && !nameValid"
+                class="text-red-500"
+              >
+                Name is required and should be at least 3 characters
+              </span>
+            <div
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
                 v-model="email"
                 type="text"
                 placeholder="Email"
+                ref="emailInput"
                 class="
                   border-0
                   outline-none
@@ -67,13 +75,21 @@
 
             </div>
 
-                        <div
+            <span
+                v-if="submitted && !emailValid"
+                class="text-red-500"
+              >
+                Enter a valid email address
+              </span>
+
+            <div
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
                 v-if="showPassword"
                 type="text"
                 placeholder="Password"
+                ref="passwordInput"
                 class="
                   border-0
                   outline-none
@@ -82,12 +98,13 @@
                   text-zinc-700
                   dark:text-zinc-300
                 "
-                v-model="Password"
+                v-model="password"
               />
               <input
                 v-else
                 type="password"
                 placeholder="Password"
+                ref="passwordInput"
                 class="
                   border-0
                   outline-none
@@ -127,68 +144,12 @@
                 ></i>
               </span>
             </div>
-
-
-            <!-- <div
-              class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
-            >
-              <input
-                v-if="showPassword"
-                type="text"
-                placeholder="Password"
-                class="
-                  border-0
-                  outline-none
-                  focus:ring-0
-                  input-field
-                  text-zinc-700
-                  dark:text-zinc-300
-                "
-                v-model="confirmPassword"
-              />
-              <input
-                v-else
-                type="password"
-                placeholder="Confirm Password"
-                class="
-                  border-0
-                  outline-none
-                  focus:ring-0
-                  input-field
-                  text-zinc-700
-                  dark:text-zinc-300
-                "
-                v-model="confirmPassword"
-              />
-              <span
-                class="
-                  material-symbols-outlined
-                  icon
-                  text-zinc-700
-                  dark:text-zinc-500
-                "
+            <span
+                v-if="submitted && !passwordValid"
+                class="text-red-500"
               >
-                lock
+                Password should be alphanumeric
               </span>
-              <span>
-                <i
-                  @click="toggleShow"
-                  class="
-                    fas
-                    text-zinc-700
-                    dark:text-zinc-400
-                    cursor-pointer
-                    absolute
-                    right-0
-                    bottom-4
-                  "
-                  :class="{
-                    'fa-eye-slash': showPassword,
-                    'fa-eye': !showPassword,
-                  }"
-                ></i>
-              </span>
-            </div> -->
 
             <button class="loginbtn"> 
               Register
@@ -200,11 +161,70 @@
                 Login
                 </router-link></p>
           </form>
+         
         </div>
       </div>
     </div>
   </div>
 </template>
+<script>
+
+export default {
+  name: "register-view",
+  data() {
+    return {
+      name: '',
+      email: '',
+      password:'',
+      showPassword: false,
+      submitted: false,
+    };
+  },
+  computed: {
+    nameValid() {
+      return !!this.name.trim() && this.name.length >= 3; 
+    },
+    emailValid() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      return emailRegex.test(this.email)
+    },
+    passwordValid() {
+      const hasLetters = /[a-zA-Z]/.test(this.password);
+      const hasNumbers = /[0-9]/.test(this.password);
+      return this.password.length >= 6 && hasLetters && hasNumbers;
+    },
+    formValid() {
+      return this.nameValid && this.emailValid && this.passwordValid 
+    }
+  },
+  methods: {
+    toggleShow() {
+      this.showPassword = !this.showPassword;
+    },
+    async handleRegisterUser(){
+      this.submitted = true;  
+      if(this.formValid){
+        
+        this.$store.dispatch('user/registerUser', {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        })
+          this.$router.push('/login');
+      }else {
+        if (!this.nameValid) {
+          this.$refs.nameInput.focus()
+        } else if(!this.emailValid){
+          this.$refs.emailInput.focus()
+        }else{
+          this.$refs.passwordInput.focus()
+        }
+      }
+    }
+  },
+};
+</script>
+
 <style scoped>
 .signup {
   margin: auto;
@@ -298,30 +318,75 @@ input:focus ~ label {
   text-decoration: none;
 }
 </style>
-<script>
 
-export default {
-  name: "register-view",
+<!-- 
+<template>
+  <form @submit.prevent="submitForm">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input
+        id="name"
+        type="text"
+        class="form-control"
+        v-model="name"
+        ref="nameInput"
+        :class="{ 'is-invalid': !nameValid }"
+      >
+      <div v-if="!nameValid" class="invalid-feedback">Please enter a valid name.</div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        id="email"
+        type="email"
+        class="form-control"
+        v-model="email"
+        ref="emailInput"
+        :class="{ 'is-invalid': !emailValid }"
+      >
+      <div v-if="!emailValid" class="invalid-feedback">Please enter a valid email address.</div>
+    </div>
+    <button type="submit" class="btn btn-primary" :disabled="!formValid">Submit</button>
+  </form>
+</template>
+
+<script>
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'MyForm',
   data() {
     return {
       name: '',
-      email: '',
-      password:'',
-      showPassword: false
-    };
-  },
-  methods: {
-    toggleShow() {
-      this.showPassword = !this.showPassword;
-    },
-    async handleRegisterUser(){
-      this.$store.dispatch('user/registerUser', {
-        name: this.name,
-        email: this.email,
-        password: this.password
-      })
-        this.$router.push('/login');
+      email: ''
     }
   },
-};
-</script>
+  computed: {
+    nameValid() {
+      return !!this.name.trim()
+    },
+    emailValid() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      return emailRegex.test(this.email)
+    },
+    formValid() {
+      return this.nameValid && this.emailValid
+    }
+  },
+  methods: {
+    submitForm() {
+      if (this.formValid) {
+        // Form data is valid, submit to server or perform other actions
+        console.log('Form submitted successfully!')
+      } else {
+        // Form data is invalid, focus on the first invalid input field
+        if (!this.nameValid) {
+          this.$refs.nameInput.focus()
+        } else {
+          this.$refs.emailInput.focus()
+        }
+      }
+    }
+  }
+})
+</script> -->

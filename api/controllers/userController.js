@@ -1,131 +1,168 @@
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
-import registerUserSchema from '../validators/user/registerUserSchema';
-import updateUserSchema from '../validators/user/updateUserSchema';
-import admin from '../services/firebase';
-import userModel from '../models/userModel';
+import registerUserSchema from "../validators/user/registerUserSchema";
+import admin from "../services/firebase";
 
 
-const adminEmails = ['ek51840@ubt-uni.net', 'ab52106@ubt-uni.net'];
+export default {
+  register: async (req, res) => {
+    const validationResult = registerUserSchema.validate(req.body);
 
-export default{
-    register: async (req, res) => {
-        // validate the user input
-        const validationResult = registerUserSchema.validate(req.body)
-
-        if (validationResult.error) {
-            return res.status(StatusCodes.BAD_REQUEST)
-                .json({
-                    error: validationResult.error.message,
-                    message: ReasonPhrases.BAD_REQUEST
-                });
-        }
-
-        const { name, email, password } = req.body;
-        try {
-            const user = await admin.auth().createUser({
-                email,
-                password
-            })
-
-            await admin.auth().updateUser(user.uid, { displayName: name })
-
-            if (adminEmails.includes(user.email)) {
-                const userClaim = { admin: true }
-                await admin.auth().setCustomUserClaims(user.uid, userClaim);
-                await admin.firestore().collection("roles")
-                    .doc(user.uid)
-                    .set({
-                        email: user.email,
-                        role: userClaim
-                    })
-            }
-
-            return res.json({ user });
-        } catch (error) {
-            return res.status(StatusCodes.FORBIDDEN).json({ error: error.message, message: ReasonPhrases.FORBIDDEN })
-
-        }
-    },
-    list: async(req, res) => {
-        try {
-            let page = req.query.page || 1;
-      
-            const limitValue = req.query.limit || 10;
-            const skipValue = (page - 1) * limitValue || 0;
-      
-            const list = await userModel.find().skip(skipValue).limit(limitValue);
-      
-            return res.json({ page: page, list: list.reverse() });
-          } catch (error) {
-            console.error("Error while getting users: " + error.message);
-            res.json("Error while getting users: " + error.message);
-          }
-    },
-    // create: async (req, res) => {
-    //     const validationResult = registerUserSchema.validate(req.body);
-
-    //     if(validationResult.error){
-    //         return res.status(StatusCodes.LENGTH_REQUIRED).json({
-    //             message: ReasonPhrases.LENGTH_REQUIRED,
-    //             error: validationResult.error.message,
-    //           });
-    //     }
-
-    //     const newUser = new userModel(validationResult.value);
-
-    //     try{
-    //         await newUser.save();
-    //         return res.json(newUser);
-    //     }catch(err){
-    //         return res.json(StatusCodes.UNAUTHORIZED).json({
-    //             message: ReasonPhrases.UNAUTHORIZED,
-    //             error: err.message,
-    //           });
-    //     }
-    // },
-    edit: async (req, res) => {
-        const validationResult = updateUserSchema.validate(req.body);
-
-        if(validationResult.error){
-            return res.status(StatusCodes.LENGTH_REQUIRED).json({
-                message: ReasonPhrases.LENGTH_REQUIRED,
-                error: validationResult.error.message,
-              });
-        }
-
-        try{
-            const user = await userModel.find({
-                _id: req.params.userId,
-            });
-
-            if(user == null){
-                console.error("null");
-                return;
-            }
-
-            const update = req.body;
-
-            await userModel.updateOne({_id:req.params.postId},{$set:update});
-            const updatedUser = await userModel.find({
-                _id:req.params.postId,
-            }) ;
-
-            return res.json(updatedUser);
-        }catch(err){
-            console.error(ReasonPhrases.NOT_FOUND);
-            return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);      
-        }
-    },
-    delete: async (req, res) => {
-        const userId = req.params.userId;
-
-        try{
-            await userModel.deleteOne({_id: userId});
-            res.json({ deleted: true});
-        }catch(error){
-            return res
-            .status(StatusCodes.NOT_FOUND)
-            .json({ message: ReasonPhrases.NOT_FOUND });
-        }
+    if (validationResult.error) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: validationResult.error.message,
+        message: ReasonPhrases.BAD_REQUEST,
+      });
     }
+
+    const { name, email, password } = req.body;
+
+    const adminEmails = ["ek51840@ubt-uni.net", "ab52106@ubt-uni.net"];
+
+    try {
+      let user = await admin.auth().createUser({
+        email,
+        password,
+      });
+
+      await admin.auth().updateUser(user.uid, { displayName: name });
+
+      if (adminEmails.includes(user.email)) {
+        const userClaims = { admin: true };
+
+        await admin.auth().setCustomUserClaims(user.uid, userClaims);
+
+        await admin.firestore().collection("roles").doc(user.uid).set({
+          email: user.email,
+          role: userClaims,
+        });
+      } else {
+        const userClaims = { user: true };
+
+        await admin.auth().setCustomUserClaims(user.uid, userClaims);
+
+        await admin.firestore().collection("roles").doc(user.uid).set({
+          email: user.email,
+          role: userClaims,
+        });
+      }
+
+      return res.json({ user });
+    } catch (error) {
+      res.json("Error: " + error);
+    }
+  },
+  login: async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+
+        await admin.auth().signInWithEmailAndPassword(email, password);
+
+        res.json("userRecord");
+
+      } catch (error) {
+
+        if (error.code === 'auth/user-not-found') {
+
+          return res.json("Not Found");
+
+        } else if (error.code === 'auth/wrong-password') {
+
+            return res.json("Invalid email or password");
+
+        }else {
+            return res.json(error.message);
+        }
+        
+      }
+    
+  },
+  allUsers: async (req, res) => {
+    try {
+      const listUsersResult = await admin.auth().listUsers();
+      const users = listUsersResult.users;
+
+      // users.forEach((user) => {
+      //     console.log(`User: ${user.uid}, email: ${user.email}`);
+      // });
+
+      return res.json({ users });
+    } catch (error) {
+      res.json("Error: " + error);
+    }
+  },
+  userById: async (req, res) => {
+    const id = req.params.id;
+
+    try {
+      const user = await admin.auth().getUser(id);
+
+      return res.json({ user });
+    } catch (error) {
+      res.json("Error: " + error);
+    }
+  },
+  editUser: async (req, res) => {
+    const id = req.params.id;
+
+    try {
+      await admin.auth().updateUser(id, {
+        displayName: req.body.name,
+        password: req.body.password,
+      });
+
+      return res.json("Updated successfully");
+    } catch (error) {
+      res.json("Error: " + error);
+    }
+  },
+  deleteUser: async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      await admin.auth().deleteUser(id);
+
+      return res.json("Deleted successfully");
+    } catch (error) {
+      res.json("Error: " + error);
+    }
+  },
+  addAdmin: async (req, res) => {
+    const { id } = req.params;
+    const { name, email, password } = req.body;
+
+    try {
+      // Get the current user's custom claims to check if they are an admin
+      const currentUser = await admin.auth().getUser(id);
+
+      if (currentUser.customClaims.admin == true) {
+        let user = await admin.auth().createUser({
+          email,
+          password,
+        });
+
+        await admin.auth().updateUser(user.uid, { displayName: name });
+
+        const userClaims = { admin: true };
+
+        await admin.auth().setCustomUserClaims(user.uid, userClaims);
+
+        const newAdm = await admin
+          .firestore()
+          .collection("roles")
+          .doc(user.uid)
+          .set({
+            email: user.email,
+            role: userClaims,
+          });
+        console.log(`User ${user.email} has been added as an admin`);
+
+        return res.json({ user });
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      return res.json("Error: " + error);
+    }
+  },
 };

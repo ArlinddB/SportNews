@@ -1,5 +1,5 @@
 <template>
-   <div>
+  <div>
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,0,0"
@@ -14,7 +14,9 @@
               <input
                 v-model="email"
                 type="email"
-                placeholder="email"
+                placeholder="Email"
+                @focus="onFocus"
+                ref="emailInput"
                 class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
                 required
               />
@@ -25,6 +27,10 @@
               </span>
             </div>
 
+            <span v-if="submitted && !emailValid" class="text-red-500">
+              Enter a valid email address
+            </span>
+
             <div
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
@@ -32,6 +38,8 @@
                 v-if="showPassword"
                 type="text"
                 placeholder="Password"
+                @focus="onFocus"
+                ref="passwordInput"
                 class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
                 v-model="password"
               />
@@ -39,6 +47,8 @@
                 v-else
                 type="password"
                 placeholder="Password"
+                @focus="onFocus"
+                ref="passwordInput"
                 class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
                 v-model="password"
               />
@@ -58,6 +68,14 @@
                 ></i>
               </span>
             </div>
+
+            <span v-if="submitted && !passwordValid" class="text-red-500">
+              Password should be alphanumeric
+            </span>
+            <span v-if="submitted && errorMessage" class="text-red-500">
+              {{ errorMessage }}
+            </span>
+
             <p>
               Don't have an account?
               <router-link to="/register"> Register </router-link>
@@ -76,7 +94,7 @@
   </div>
 </template>
 
-<style scoped> 
+<style scoped>
 .signup {
   margin: auto;
   max-width: 460px;
@@ -166,7 +184,7 @@ input:focus ~ label {
 
 .signup p > a {
   color: #216ce7;
-  text-decoration: none; 
+  text-decoration: none;
 }
 </style>
 
@@ -178,21 +196,51 @@ export default {
       email: "",
       password: "",
       showPassword: false,
-      user: null,
+      errorMessage: null,
+      submitted: false,
+      focused: false,
     };
+  },
+  computed: {
+    emailValid() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(this.email);
+    },
+    passwordValid() {
+      const hasLetters = /[a-zA-Z]/.test(this.password);
+      const hasNumbers = /[0-9]/.test(this.password);
+      return this.password.length >= 6 && hasLetters && hasNumbers;
+    },
+    formValid() {
+      return this.emailValid && this.passwordValid;
+    },
   },
   methods: {
     toggleShow() {
       this.showPassword = !this.showPassword;
     },
     async handleLogInUser() {
-      this.$store.dispatch("user/logInUser", {
-        email: this.email,
-        password: this.password,
-      });
-      this.$router.back();
-      console.log("logged in");
+      this.submitted = true;
+      if (this.formValid) {
+        try {
+          await this.$store.dispatch("user/logInUser", {
+            email: this.email,
+            password: this.password,
+          });
+          this.$router.push({ name: "home" });
+        } catch (error) {
+          this.errorMessage = error.message;
+        }
+        // if (this.errorMessage === "") {
+        //   this.$router.push({ name: "home" });
+        //   return;
+        // }
+      }
     },
+    onFocus() {
+      this.errorMessage = null;
+    },
+
   },
 };
 </script>
