@@ -158,7 +158,54 @@ const routes = [
         meta: { title: "Details" },
         component: () => import("../views/dashboard/categories/CategoriesDetails.vue"),
       },
-    ]
+      {
+        name: "posts-dashboard",
+        path: "posts",
+        meta: { title: "Posts" },
+        component: () => import("../views/dashboard/posts/PostsList.vue"),
+      },
+      {
+        name: "posts-create-dashboard",
+        path: "posts/create",
+        meta: { title: "Create" },
+        component: () => import("../views/dashboard/posts/PostsCreate.vue"),
+      },
+      {
+        name: "posts-edit-dashboard",
+        path: "posts/edit/:id",
+        meta: { title: "Edit" },
+        component: () => import("../views/dashboard/posts/PostsEdit.vue"),
+      },
+      {
+        name: "posts-details-dashboard",
+        path: "posts/details/:id",
+        meta: { title: "Details" },
+        component: () => import("../views/dashboard/posts/PostsDetails.vue"),
+      },
+      {
+        name: "users-dashboard",
+        path: "users",
+        meta: { title: "Users" },
+        component: () => import("../views/dashboard/users/UsersList.vue"),
+      },
+      {
+        name: "users-create-dashboard",
+        path: "users/create",
+        meta: { title: "Create" },
+        component: () => import("../views/dashboard/users/UsersCreate.vue"),
+      },
+      {
+        name: "users-edit-dashboard",
+        path: "users/edit/:id",
+        meta: { title: "Edit" },
+        component: () => import("../views/dashboard/users/UsersEdit.vue"),
+      },
+      {
+        name: "users-details-dashboard",
+        path: "users/details/:id",
+        meta: { title: "Details" },
+        component: () => import("../views/dashboard/users/UsersDetails.vue"),
+      },    ]
   },
   {
     path: "/NotFound",

@@ -52,7 +52,7 @@ export default {
 
       this.$store.dispatch("post/createPost", { ...this.newPost });
 
-      this.$router.push("/posts/list");
+      this.$router.push("/dashboard/posts/");
     },
   },
   mounted() {
@@ -64,7 +64,7 @@ export default {
 <template>
   <div class="p-0 sm:p-12 min-h-[79vh]">
     <div
-      class="mx-auto max-w-md mt-8 px-6 py-12 bg-gray-50 dark:bg-gray-900 border-0 shadow-lg sm:rounded-3xl"
+      class="mx-auto max-w-md mt-8 px-6 py-12 bg-gray-50 dark:bg-[#17191f] border-0 shadow-lg sm:rounded-3xl"
     >
       <h1 class="text-2xl font-bold mb-8 text-zinc-700 dark:text-zinc-300">
         Add a new Post
@@ -167,7 +167,7 @@ export default {
         <div class="flex justify-between">
           <router-link
             class="hvr-icon-back px-4 py-2.5 mt-3 text-md text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-gray-500 hover:bg-gray-700 hover:shadow-lg focus:outline-none"
-            to="/posts/list"
+            to="/dashboard/posts"
           >
             <i class="fa-solid fa-angle-left hvr-icon mr-2"></i>
             Back to list

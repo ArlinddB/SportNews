@@ -2,7 +2,6 @@ import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import registerUserSchema from "../validators/user/registerUserSchema";
 import admin from "../services/firebase";
 
-
 export default {
   register: async (req, res) => {
     const validationResult = registerUserSchema.validate(req.body);
@@ -51,31 +50,39 @@ export default {
       res.json("Error: " + error);
     }
   },
+  usersByClaim: async (req, res) => {
+    const claimType = req.params.claim;
+    try {
+      await admin
+        .auth()
+        .listUsers()
+        .then((listUsersResult) => {
+          const usersWithClaim = listUsersResult.users.filter(
+            (user) => user.customClaims && user.customClaims[claimType] === true
+          );
+          res.send(usersWithClaim);
+        });
+    } catch (error) {
+      console.log("Error listing users:", error);
+      res.status(500).send("Error listing users");
+    }
+  },
   login: async (req, res) => {
     const { email, password } = req.body;
 
     try {
+      await admin.auth().signInWithEmailAndPassword(email, password);
 
-        await admin.auth().signInWithEmailAndPassword(email, password);
-
-        res.json("userRecord");
-
-      } catch (error) {
-
-        if (error.code === 'auth/user-not-found') {
-
-          return res.json("Not Found");
-
-        } else if (error.code === 'auth/wrong-password') {
-
-            return res.json("Invalid email or password");
-
-        }else {
-            return res.json(error.message);
-        }
-        
+      res.json("userRecord");
+    } catch (error) {
+      if (error.code === "auth/user-not-found") {
+        return res.json("Not Found");
+      } else if (error.code === "auth/wrong-password") {
+        return res.json("Invalid email or password");
+      } else {
+        return res.json(error.message);
       }
-    
+    }
   },
   allUsers: async (req, res) => {
     try {
@@ -108,7 +115,7 @@ export default {
     try {
       await admin.auth().updateUser(id, {
         displayName: req.body.name,
-        password: req.body.password,
+        // password: req.body.password,
       });
 
       return res.json("Updated successfully");

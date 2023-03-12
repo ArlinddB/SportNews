@@ -7,17 +7,23 @@ import logInUser from "@/firebase/user/logInUser";
 export default {
   namespaced: true,
   state: {
-    user: null,
+    user: [],
+    userById: {},
+    usersByClaim: [],
     isLoading: null,
   },
   getters: {
     user: (state) => state.user,
+    userById: state => {
+      return state.userById
+    },
+    usersByClaim: (state) => state.usersByClaim,
     isLoading: (state) => state.isLoading,
   },
   actions: {
-    async logInUser({ commit, dispatch }, payload) {
+    async logInUser({ commit }, payload) {
       const user = await logInUser(payload);
-      commit("setUser", user);
+      // commit("setUser", user);
     },
 
     async registerUser({ commit }, payload) {
@@ -29,15 +35,48 @@ export default {
 
       const { data } = res;
 
+      commit('setUserById', data);
+
       console.log(data);
-
-      commit("setUser", data);
     },
+    async usersByClaim ({commit}, claim){
+      const res = await axios.get(`${process.env.VUE_APP_API}users/usersByClaim/${claim}`)
 
+      const { data } = res;
+      
+      commit('setUsersByClaim', data)
+    },
+    async editUser({commit}, user){
+      const res = await axios.put(`${process.env.VUE_APP_API}users/editUser/${user.uid}`, user)
+
+      commit('updateUser', res.data)
+    },
+    async deleteUser({commit}, id){
+      console.log(id);
+      await axios.delete(`${process.env.VUE_APP_API}users/${id}`)
+
+      commit('deleteUser', id)
+    }
   },
   mutations: {
     setUser(state, user) {
       state.user = user;
+    },
+    setUserById(state, user) {
+      state.userById = user;
+    },
+    setUsersByClaim(state, users){
+      state.usersByClaim = users;
+    },
+    updatePost(state, user) {
+      let c = state.usersByClaim.find((v) => v.uid == user.uid);
+      c = user;
+    },
+    setDeleteUser(state, id){
+      state.usersByClaim = state.usersByClaim.filter(
+        (user) => user.uid !== id
+      );
+      // state.allPosts = state.allPosts.filter((post) => post._id !== postId);
     },
     setIsLoading(state, isLoading) {
       state.isLoading = isLoading;
