@@ -71,12 +71,13 @@
               class="absolute z-50 py-2 bg-indigo-900 lg:absolute lg:right-0 w-[120px] rounded-md shadow-lg mt-2"
             >
               <ul>
-                <li
+                <router-link
+                 to="/users/profile"
                   @click="toggleDropdown"
                   class="cursor-pointer px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
                 >
                   Profile
-                </li>
+                </router-link>
                 <li
                   @click="
                     toggleDropdown();
