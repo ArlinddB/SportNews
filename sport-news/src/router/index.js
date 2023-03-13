@@ -1,5 +1,7 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { createRouter, createWebHistory } from "vue-router";
+import store from '../store/index'
+import axios from 'axios'
 
 const routes = [
   {
@@ -131,32 +133,36 @@ const routes = [
       {
         name: "dashboard",
         path: "",
-        meta: { title: "Dashboard" },
+        meta: { title: "Dashboard", requiresAuth: true, requiresAdmin: true },
         component: () => import("../views/dashboard/DashboardView.vue"),
       },
       {
         name: "categories-dashboard",
         path: "categories",
         meta: { title: "Categories" },
-        component: () => import("../views/dashboard/categories/CategoriesList.vue"),
+        component: () =>
+          import("../views/dashboard/categories/CategoriesList.vue"),
       },
       {
         name: "categories-create-dashboard",
         path: "categories/create",
         meta: { title: "Create" },
-        component: () => import("../views/dashboard/categories/CategoriesCreate.vue"),
+        component: () =>
+          import("../views/dashboard/categories/CategoriesCreate.vue"),
       },
       {
         name: "categories-edit-dashboard",
         path: "categories/edit/:id",
         meta: { title: "Edit" },
-        component: () => import("../views/dashboard/categories/CategoriesEdit.vue"),
+        component: () =>
+          import("../views/dashboard/categories/CategoriesEdit.vue"),
       },
       {
         name: "categories-details-dashboard",
         path: "categories/details/:id",
         meta: { title: "Details" },
-        component: () => import("../views/dashboard/categories/CategoriesDetails.vue"),
+        component: () =>
+          import("../views/dashboard/categories/CategoriesDetails.vue"),
       },
       {
         name: "posts-dashboard",
@@ -205,7 +211,8 @@ const routes = [
         path: "users/details/:id",
         meta: { title: "Details" },
         component: () => import("../views/dashboard/users/UsersDetails.vue"),
-      },    ]
+      },
+    ],
   },
   {
     path: "/NotFound",
@@ -229,6 +236,25 @@ const routeNames = routes.flatMap((route) =>
 );
 
 router.beforeEach((to, from, next) => {
+
+  // const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  // const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
+  // const currentUser = store.state.user.user
+
+  //   axios.get(`${process.env.VUE_APP_API}users/${currentUser.uid}`).then((res) => {
+  //     const data = res.data
+  //       role = data.user?.customClaims
+  //   });
+  
+
+  // if (requiresAuth && !currentUser) {
+  //   next('/login')
+  // } else if (requiresAdmin && role.admin != true) {
+  //   next('/')
+  // } else {
+  //   next()
+  // }
+
   document.title = to.meta.title + " - SportNews";
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
