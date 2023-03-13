@@ -1,21 +1,29 @@
 <script>
-import { mapGetters, mapState } from "vuex";
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      role: "User",
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        role: ''
+      }
     };
   },
-  computed: {
-    // ...mapGetters({
-    //   user: "user/user",
-    // }),
-    ...mapState({
-        userById: state => state.user.userById
-    })
-  },
   async mounted() {
-    this.$store.dispatch("user/userById", this.$route.params.id);
+    const res = await axios.get(`${process.env.VUE_APP_API}users/${this.$route.params.id}`)
+
+    const { data } = res;
+
+    this.user.id = data.user.uid;
+
+    this.user.name = data.user.displayName;
+    this.user.email = data.user.email
+    if(data.user.customClaims.user == true){
+      this.user.role = 'User'
+    }
   },
 };
 </script>
@@ -35,7 +43,7 @@ export default {
               type="text"
               placeholder=" "
               id="name"
-              v-model="userById.user.displayName"
+              v-model="user.name"
               :disabled="true"
               class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 border-zinc-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-400 text-zinc-700 dark:text-zinc-300"
             />
@@ -50,7 +58,7 @@ export default {
               type="email"
               placeholder=" "
               id="email"
-              v-model="userById.user.email"
+              v-model="user.email"
               :disabled="true"
               class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 border-zinc-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-400 text-zinc-700 dark:text-zinc-300"
             />
@@ -65,8 +73,8 @@ export default {
               type="text"
               placeholder=" "
               id="name"
-              v-if="userById.user.customClaims.user == true"
-              v-model="role"
+              v-if="user.role"
+              v-model="user.role"
               :disabled="true"
               class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 border-zinc-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-400 text-zinc-700 dark:text-zinc-300"
             />
