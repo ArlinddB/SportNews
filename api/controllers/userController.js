@@ -113,10 +113,19 @@ export default {
     const id = req.params.id;
 
     try {
-      await admin.auth().updateUser(id, {
-        displayName: req.body.name,
-        // password: req.body.password,
-      });
+      if(req.body.password){
+        await admin.auth().updateUser(id, {
+          email: req.body.email,
+          displayName: req.body.name,
+          password: req.body.password,
+        });
+      }else{
+        await admin.auth().updateUser(id, {
+          email: req.body.email,
+          displayName: req.body.name,
+        });
+      }
+      
 
       return res.json("Updated successfully");
     } catch (error) {

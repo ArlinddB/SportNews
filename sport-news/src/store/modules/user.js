@@ -37,7 +37,6 @@ export default {
 
       commit('setUserById', data);
 
-      console.log(data);
     },
     async usersByClaim ({commit}, claim){
       const res = await axios.get(`${process.env.VUE_APP_API}users/usersByClaim/${claim}`)
@@ -47,12 +46,12 @@ export default {
       commit('setUsersByClaim', data)
     },
     async editUser({commit}, user){
-      const res = await axios.put(`${process.env.VUE_APP_API}users/editUser/${user.uid}`, user)
+      const res = await axios.put(`${process.env.VUE_APP_API}users/${user.id}`, user)
 
       commit('updateUser', res.data)
     },
     async deleteUser({commit}, id){
-      console.log(id);
+      
       await axios.delete(`${process.env.VUE_APP_API}users/${id}`)
 
       commit('deleteUser', id)

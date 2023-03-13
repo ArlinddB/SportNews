@@ -34,7 +34,7 @@
         <li class="text-zinc-100 hover:text-white">
           <router-link to="/">Home</router-link>
         </li>
-        <Dropdown title="Managment" :options="managment" />
+        <Dropdown title="Managment" :options="managment"  v-if="user.role == 'Admin'"/>
         <Dropdown title="News" :options="categories" />
         <Dropdown title="Standings" :options="standings" />
         <li>
@@ -57,7 +57,7 @@
               @click="toggleDropdown"
               class="font-semibold text-zinc-100 hover:text-white rounded-md focus:outline-none inline-flex items-center"
             >
-              <span>{{ this.$store.state.user.user.displayName }}</span>
+              <span>{{ user.name }}</span>
               <svg
                 class="fill-current h-4 w-4"
                 viewBox="0 0 20 20"
@@ -116,7 +116,7 @@ import Dropdown from "./reusable/Dropdown.vue";
 import { getAuth, signOut } from "firebase/auth";
 import { directive } from "vue3-click-away";
 import { mapGetters } from 'vuex';
-import { is } from "@babel/types";
+import axios from 'axios';
 
 
 export default {
@@ -151,17 +151,46 @@ export default {
         },
       ],
       open: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        role: '',
+        abc: false,
+      }
     };
   },
   computed: {
     ...mapGetters({
-      user: 'user/user'
+      us: 'user/user'
     }),
+  },
+  async mounted() {
+    const res = await axios.get(`${process.env.VUE_APP_API}users/${this.$store.state.user.user.uid}`)
+
+    const { data } = res;
+
+    console.log(data);
+
+    if(data){
+      this.user.id = data.user.uid;
+
+      this.user.name = data.user.displayName;
+      console.log(this.user.name);
+      this.user.email = data.user.email
+      if(data.user.customClaims.user == true){
+        this.user.role = 'User'
+      }else if(data.user.customClaims.admin == true){
+        this.user.role = 'Admin'
+      }
+      this.abc = true
+    } 
   },
   methods: {
     async handleLogOut() {
       const auth = getAuth();
       await signOut(auth);
+      this.$router.push('/')
     },
     onClickAway(event) {
       this.open = false;
