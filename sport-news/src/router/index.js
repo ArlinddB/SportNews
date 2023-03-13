@@ -193,13 +193,20 @@ const routes = [
         path: "users/details/:id",
         meta: { title: "Details" },
         component: () => import("../views/dashboard/users/UsersDetails.vue"),
-      },    ]
+      },  
+      ]
   },
   {
     path: "/NotFound",
     name: "404",
     meta: { title: "Not Found" },
     component: () => import("../views/FourOFourView.vue"),
+  },
+  {
+    name: "users-profile",
+    path: "/profile",
+    meta: { title: "Profile" },
+    component: () => import("../views/user/UserProfile.vue"),
   },
 ];
 

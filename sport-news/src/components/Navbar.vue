@@ -57,7 +57,8 @@
               @click="toggleDropdown"
               class="font-semibold text-zinc-100 hover:text-white rounded-md focus:outline-none inline-flex items-center"
             >
-              <span>{{ user.name }}</span>
+              <span>{{ this.$store.state.user.user.displayName }}</span>
+              <!-- <span>{{ user.name }}</span> -->
               <svg
                 class="fill-current h-4 w-4"
                 viewBox="0 0 20 20"
@@ -72,7 +73,7 @@
             >
               <ul>
                 <router-link
-                 to="/users/profile"
+                 to="/profile"
                   @click="toggleDropdown"
                   class="cursor-pointer px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
                 >

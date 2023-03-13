@@ -8,7 +8,7 @@
         class="min-h-[79vh]">
       <div class="pt-16">
         <div class="signup bg-gray-50 dark:bg-gray-900 shadow-md">
-          <!-- <form @submit.prevent="handleUpdate" class="form1">
+          <form @submit.prevent="handleUpdate" class="form1">
             <div
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
@@ -51,22 +51,22 @@
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
-                v-if="showPassword"
-                type="text"
-                placeholder=""
-                @focus="onFocus"
-                ref="passwordInput"
-                class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
-                v-model="this.$store.state.user.user.password"
-              />
-              <input
-                v-else
+                v-if="!showPassword"
                 type="password"
                 placeholder=""
                 @focus="onFocus"
                 ref="passwordInput"
                 class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
-                v-model="password"
+                v-model="user.password"
+              />
+              <input
+                v-else
+                type="text"
+                placeholder=""
+                @focus="onFocus"
+                ref="passwordInput"
+                class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
+                v-model="user.password"
               />
               <span
                 class="material-symbols-outlined icon text-zinc-700 dark:text-zinc-500"
@@ -98,7 +98,7 @@
               <span class="material-symbols-outlined"> arrow_forward </span>
             </button>
             <br />
-          </form> -->
+          </form>
         </div>
       </div>
     </div>
@@ -109,38 +109,48 @@
 
 
  <script>
-// export default {
-//   name: "login-view",
-//   data() {
-//     return {
-//       user: null,
-//       email: "",
-//       password: "",
-//       username: "",
-//       showPassword: false,
-//       errorMessage: null,
-//       submitted: false,
-//       focused: false,
-//     };
-//   },
-//   computed: {
-//     emailValid() {
-//       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//       return emailRegex.test(this.email);
-//     },
-//     passwordValid() {
-//       const hasLetters = /[a-zA-Z]/.test(this.password);
-//       const hasNumbers = /[0-9]/.test(this.password);
-//       return this.password.length >= 6 && hasLetters && hasNumbers;
-//     },
-//     formValid() {
-//       return this.emailValid && this.passwordValid;
-//     },
-//   },
-//   methods: {
-//     toggleShow() {
-//       this.showPassword = !this.showPassword;
-//     },
+export default {
+  name: "login-view",
+  data() {
+    return {
+      user: {
+        id: '',
+        email: "",
+        password: "",
+        name: "",
+      },
+      showPassword: false,
+      errorMessage: null,
+      submitted: false,
+      focused: false,
+    };
+  },
+  computed: {
+    emailValid() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(this.email);
+    },
+    passwordValid() {
+      const hasLetters = /[a-zA-Z]/.test(this.password);
+      const hasNumbers = /[0-9]/.test(this.password);
+      return this.password.length >= 6 && hasLetters && hasNumbers;
+    },
+    formValid() {
+      return this.emailValid && this.passwordValid;
+    },
+  },
+  mounted(){
+    this.user.id = this.$store.state.user.user.uid
+    this.user.name = this.$store.state.user.user.displayName
+    this.user.email = this.$store.state.user.user.email
+  },
+  methods: {
+    toggleShow() {
+      this.showPassword = !this.showPassword;
+    },
+    async handleUserUpdate(){
+        this.$store.dispatch('user/editUser', {...this.user})
+    },
     // async handleLogInUser() {
     //   this.submitted = true;
     //   if (this.formValid) {
@@ -159,12 +169,13 @@
     //     // }
     //   }
     // },
-//     onFocus() {
-//       this.errorMessage = null;
-//     },
+    onFocus() {
+      this.errorMessage = null;
+    },
 
-//   },
-// };
+  },
+  
+};
 </script>
 
 <style scoped>

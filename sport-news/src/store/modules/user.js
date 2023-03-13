@@ -23,7 +23,7 @@ export default {
   actions: {
     async logInUser({ commit }, payload) {
       const user = await logInUser(payload);
-      // commit("setUser", user);
+      commit("setUser", user);
     },
 
     async registerUser({ commit }, payload) {

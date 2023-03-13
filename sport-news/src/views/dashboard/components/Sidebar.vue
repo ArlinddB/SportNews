@@ -31,9 +31,9 @@
                 </button>
                 <div v-show="open1" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg" style="z-index: 1;">
                     <div class="px-2 py-2 rounded-md shadow bg-gray-800 z-10">
-                        <a class="block px-4 py-2 mt-2 text-sm font-semibold rounded-lg bg-transparent hover:bg-gray-600 focus:bg-gray-600 focus:text-white hover:text-white text-gray-200 focus:outline-none focus:shadow-outline" >All Users</a>
-                        <a class="block px-4 py-2 mt-2 text-sm font-semibold rounded-lg bg-transparent hover:bg-gray-600 focus:bg-gray-600 focus:text-white hover:text-white text-gray-200 focus:outline-none focus:shadow-outline" >Normal Users</a>
-                        <a class="block px-4 py-2 mt-2 text-sm font-semibold rounded-lg bg-transparent hover:bg-gray-600 focus:bg-gray-600 focus:text-white hover:text-white text-gray-200 focus:outline-none focus:shadow-outline" >Admins</a>
+                        <router-link :to="{name: 'users-dashboard'}"  class="block px-4 py-2 mt-2 text-sm font-semibold rounded-lg bg-transparent hover:bg-gray-600 focus:bg-gray-600 focus:text-white hover:text-white text-gray-200 focus:outline-none focus:shadow-outline" >All Users</router-link>
+                        <router-link to="" class="block px-4 py-2 mt-2 text-sm font-semibold rounded-lg bg-transparent hover:bg-gray-600 focus:bg-gray-600 focus:text-white hover:text-white text-gray-200 focus:outline-none focus:shadow-outline" >Normal Users</router-link>
+                        <router-link to="" class="block px-4 py-2 mt-2 text-sm font-semibold rounded-lg bg-transparent hover:bg-gray-600 focus:bg-gray-600 focus:text-white hover:text-white text-gray-200 focus:outline-none focus:shadow-outline" >Admins</router-link>
                     </div>
                 </div>
             </div>
