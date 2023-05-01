@@ -64,7 +64,7 @@ export default {
       this.clickCallback();
     },
   },
-  mounted() {
+  async mounted() {
     const storedPage = sessionStorage.getItem("page");
     const storedPageSize = sessionStorage.getItem("pageSize");
 
@@ -91,7 +91,7 @@ export default {
         <div class="pt-2 pb-6 flex justify-between">
           <router-link
             class="inline-block px-4 py-2.5 text-white font-medium text-sm leading-tight rounded shadow-md bg-blue-600 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-lg transition duration-150 ease-in-out"
-            :to="{name: 'categories-create'}"
+            :to="{ name: 'categories-create' }"
             >Add new Category
           </router-link>
           <div
@@ -139,7 +139,10 @@ export default {
                 <td class="px-5 py-5 bg-gray-50 dark:bg-gray-900 text-sm">
                   <router-link
                     class="inline-block px-4 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out m-1"
-                    :to="{name: 'categories-edit', params: { id: `${category._id}`}}  "
+                    :to="{
+                      name: 'categories-edit',
+                      params: { id: `${category._id}` },
+                    }"
                     ><i class="fa-solid fa-pen mr-2"></i>Edit</router-link
                   >
                   <a
@@ -149,7 +152,10 @@ export default {
                   >
                   <router-link
                     class="inline-block px-4 py-[8px] border-2 border-blue-700 text-zinc-700 dark:text-white font-medium text-xs leading-tight rounded hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-0 transition duration-150 ease-in-out m-1"
-                    :to="{name: 'categories-details', params: { id: `${category._id}`}}"
+                    :to="{
+                      name: 'categories-details',
+                      params: { id: `${category._id}` },
+                    }"
                     ><i class="fa-solid fa-eye mr-2"></i>Details</router-link
                   >
                 </td>

@@ -189,7 +189,7 @@ input:focus ~ label {
 </style>
 
  <script>
-import { getAuth } from '@firebase/auth';
+import { getAuth } from "@firebase/auth";
 const auth = getAuth();
 
 export default {
@@ -230,6 +230,7 @@ export default {
             email: this.email,
             password: this.password,
           });
+          location.reload();
           this.$router.push({ name: "home" });
         } catch (error) {
           this.errorMessage = error.message;
@@ -239,7 +240,6 @@ export default {
     onFocus() {
       this.errorMessage = null;
     },
-
   },
 };
 </script>

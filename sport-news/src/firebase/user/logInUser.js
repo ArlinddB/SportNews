@@ -1,4 +1,5 @@
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import axios from "axios";
 
 async function logInUser(payload) {
   const auth = getAuth();
@@ -8,7 +9,12 @@ async function logInUser(payload) {
   try {
     const user = await signInWithEmailAndPassword(auth, email, password);
 
-    return user;
+    const res = await axios.get(
+      `${process.env.VUE_APP_API}users/${user.id}`
+    );
+    
+    const { data } = res.data; 
+    return data;
   } catch (error) {
     if (error.code === "auth/user-not-found") {
       throw new Error("User does not exists");

@@ -1,6 +1,7 @@
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import registerUserSchema from "../validators/user/registerUserSchema";
 import admin from "../services/firebase";
+import User from '../models/userModel';
 
 export default {
   register: async (req, res) => {
@@ -45,9 +46,17 @@ export default {
         });
       }
 
+      const abc = await admin.auth().getUser(user.uid);
+
+      const newUser = new User({
+       data: abc, 
+      });
+
+      await newUser.save();
+
       return res.json({ user });
     } catch (error) {
-      res.json("Error: " + error);
+      res.json(error);
     }
   },
   usersByClaim: async (req, res) => {
@@ -102,9 +111,12 @@ export default {
     const id = req.params.id;
 
     try {
-      const user = await admin.auth().getUser(id);
+      const user = await User.findOne({
+        uid: req.params.id
+      })
 
-      return res.json({ user });
+      if (user == null) return res.json(ReasonPhrases.NOT_FOUND);
+      return res.json(user);
     } catch (error) {
       res.json("Error: " + error);
     }
@@ -113,19 +125,32 @@ export default {
     const id = req.params.id;
 
     try {
-      if(req.body.password){
+      if (req.body.password != '') {
         await admin.auth().updateUser(id, {
           email: req.body.email,
           displayName: req.body.name,
           password: req.body.password,
         });
-      }else{
+      } else {
         await admin.auth().updateUser(id, {
           email: req.body.email,
           displayName: req.body.name,
         });
       }
       
+      const user = await User.findOne({
+        uid: id
+      })
+
+      if(user != null) await User.deleteOne({ uid: id})
+
+      const abc = await admin.auth().getUser(id);
+
+      const newUser = new User({
+        data: abc, 
+       });
+ 
+       await newUser.save();
 
       return res.json("Updated successfully");
     } catch (error) {

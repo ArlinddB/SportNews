@@ -8,12 +8,14 @@ export default {
   namespaced: true,
   state: {
     user: [],
+    users: [],
     userById: {},
     usersByClaim: [],
     isLoading: null,
   },
   getters: {
     user: (state) => state.user,
+    users: (state) => state.users,
     userById: state => {
       return state.userById
     },
@@ -25,7 +27,10 @@ export default {
       const user = await logInUser(payload);
       commit("setUser", user);
     },
-
+    async allUsers({commit}){
+      const res = await axios.get(`${process.env.VUE_APP_API}users/`);
+      commit('setAllUsers', res.data.users)
+    },
     async registerUser({ commit }, payload) {
       await apiRequest.registerUser(payload);
     },
@@ -46,6 +51,7 @@ export default {
       commit('setUsersByClaim', data)
     },
     async editUser({commit}, user){
+      console.log(user);
       const res = await axios.put(`${process.env.VUE_APP_API}users/${user.id}`, user)
 
       commit('updateUser', res.data)
@@ -64,12 +70,15 @@ export default {
     setUserById(state, user) {
       state.userById = user;
     },
+    setAllUsers(state, users) {
+      state.users = users;
+    },
     setUsersByClaim(state, users){
       state.usersByClaim = users;
     },
-    updatePost(state, user) {
-      let c = state.usersByClaim.find((v) => v.uid == user.uid);
-      c = user;
+    updateUser(state, usr) {
+      let c = state.users.find((v) => v.uid == usr.id);
+      c = usr;
     },
     setDeleteUser(state, id){
       state.usersByClaim = state.usersByClaim.filter(

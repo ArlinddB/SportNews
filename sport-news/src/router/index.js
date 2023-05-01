@@ -1,7 +1,7 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { createRouter, createWebHistory } from "vue-router";
-import store from '../store/index'
-import axios from 'axios'
+import store from "../store/index";
+import axios from "axios";
 
 const routes = [
   {
@@ -23,26 +23,26 @@ const routes = [
       {
         name: "categories-list",
         path: "",
-        meta: { title: "Categories" },
+        meta: { title: "Categories", requiresAdmin: true },
         component: () => import("../views/categories/CategoryList.vue"),
       },
       {
         name: "categories-create",
         path: "create",
-        meta: { title: "Create" },
+        meta: { title: "Create", requiresAdmin: true },
         component: () => import("../views/categories/CategoryCreateView.vue"),
       },
       {
         name: "categories-edit",
         path: "edit/:id",
-        meta: { title: "Edit" },
+        meta: { title: "Edit", requiresAdmin: true },
         component: () => import("../views/categories/CategoryEditView.vue"),
         params: true,
       },
       {
         name: "categories-details",
         path: "details/:id",
-        meta: { title: "Details" },
+        meta: { title: "Details", requiresAdmin: true },
         component: () => import("../views/categories/CategoryDetailsView.vue"),
         params: true,
       },
@@ -86,25 +86,25 @@ const routes = [
       {
         name: "posts-list",
         path: "list",
-        meta: { title: "Posts" },
+        meta: { title: "Posts", requiresAdmin: true },
         component: () => import("../views/posts/PostsList.vue"),
       },
       {
         name: "posts-create",
         path: "create",
-        meta: { title: "Create" },
+        meta: { title: "Create", requiresAdmin: true },
         component: () => import("../views/posts/PostsCreate.vue"),
       },
       {
         name: "posts-edit",
         path: "edit/:id",
-        meta: { title: "Edit" },
+        meta: { title: "Edit", requiresAdmin: true },
         component: () => import("../views/posts/PostsEdit.vue"),
       },
       {
         name: "posts-details",
         path: "details/:id",
-        meta: { title: "Details" },
+        meta: { title: "Details", requiresAdmin: true },
         component: () => import("../views/posts/PostsDetails.vue"),
       },
       {
@@ -121,83 +121,83 @@ const routes = [
       {
         name: "dashboard",
         path: "",
-        meta: { title: "Dashboard", requiresAuth: true, requiresAdmin: true },
+        meta: { title: "Dashboard", requiresAdmin: true },
         component: () => import("../views/dashboard/DashboardView.vue"),
       },
       {
         name: "categories-dashboard",
         path: "categories",
-        meta: { title: "Categories" },
+        meta: { title: "Categories", requiresAdmin: true },
         component: () =>
           import("../views/dashboard/categories/CategoriesList.vue"),
       },
       {
         name: "categories-create-dashboard",
         path: "categories/create",
-        meta: { title: "Create" },
+        meta: { title: "Create", requiresAdmin: true },
         component: () =>
           import("../views/dashboard/categories/CategoriesCreate.vue"),
       },
       {
         name: "categories-edit-dashboard",
         path: "categories/edit/:id",
-        meta: { title: "Edit" },
+        meta: { title: "Edit", requiresAdmin: true },
         component: () =>
           import("../views/dashboard/categories/CategoriesEdit.vue"),
       },
       {
         name: "categories-details-dashboard",
         path: "categories/details/:id",
-        meta: { title: "Details" },
+        meta: { title: "Details", requiresAdmin: true },
         component: () =>
           import("../views/dashboard/categories/CategoriesDetails.vue"),
       },
       {
         name: "posts-dashboard",
         path: "posts",
-        meta: { title: "Posts" },
+        meta: { title: "Posts", requiresAdmin: true },
         component: () => import("../views/dashboard/posts/PostsList.vue"),
       },
       {
         name: "posts-create-dashboard",
         path: "posts/create",
-        meta: { title: "Create" },
+        meta: { title: "Create", requiresAdmin: true },
         component: () => import("../views/dashboard/posts/PostsCreate.vue"),
       },
       {
         name: "posts-edit-dashboard",
         path: "posts/edit/:id",
-        meta: { title: "Edit" },
+        meta: { title: "Edit", requiresAdmin: true },
         component: () => import("../views/dashboard/posts/PostsEdit.vue"),
       },
       {
         name: "posts-details-dashboard",
         path: "posts/details/:id",
-        meta: { title: "Details" },
+        meta: { title: "Details", requiresAdmin: true },
         component: () => import("../views/dashboard/posts/PostsDetails.vue"),
       },
       {
         name: "users-dashboard",
         path: "users",
-        meta: { title: "Users" },
+        meta: { title: "Users", requiresAdmin: true },
         component: () => import("../views/dashboard/users/UsersList.vue"),
       },
       {
         name: "users-create-dashboard",
         path: "users/create",
-        meta: { title: "Create" },
+        meta: { title: "Create", requiresAdmin: true },
         component: () => import("../views/dashboard/users/UsersCreate.vue"),
       },
       {
         name: "users-edit-dashboard",
         path: "users/edit/:id",
-        meta: { title: "Edit" },
+        meta: { title: "Edit", requiresAdmin: true },
         component: () => import("../views/dashboard/users/UsersEdit.vue"),
       },
       {
         name: "users-details-dashboard",
         path: "users/details/:id",
-        meta: { title: "Details" },
+        meta: { title: "Details", requiresAdmin: true },
         component: () => import("../views/dashboard/users/UsersDetails.vue"),
       },
     ],
@@ -211,7 +211,7 @@ const routes = [
   {
     name: "users-profile",
     path: "/profile",
-    meta: { title: "Profile" },
+    meta: { title: "Profile", requiresAuth: true },
     component: () => import("../views/user/UserProfile.vue"),
   },
 ];
@@ -230,38 +230,41 @@ const routeNames = routes.flatMap((route) =>
 );
 
 router.beforeEach((to, from, next) => {
+  let role = "";
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requiresAdmin = to.matched.some((record) => record.meta.requiresAdmin);
 
-  // const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  // const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
-  // const currentUser = store.state.user.user
-
-  //   axios.get(`${process.env.VUE_APP_API}users/${currentUser.uid}`).then((res) => {
-  //     const data = res.data
-  //       role = data.user?.customClaims
-  //   });
-  
-
-  // if (requiresAuth && !currentUser) {
-  //   next('/login')
-  // } else if (requiresAdmin && role.admin != true) {
-  //   next('/')
-  // } else {
-  //   next()
-  // }
-
+  const currentUser = store.state.user.user;
+  if (currentUser) {
+    axios
+      .get(`${process.env.VUE_APP_API}users/${currentUser.uid}`)
+      .then((res) => {
+        const data = res.data;
+        role = data.user?.customClaims;
+      });
+  }
   document.title = to.meta.title + " - SportNews";
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (guestRouteNames.includes(to.name) && user) {
-      next({ name: "home" });
-      return;
-    } else if (!routeNames.includes(to.name)) {
-      next({ name: "404" });
-    } else {
-      next();
-      return;
-    }
-  });
-});
+  if (requiresAuth && !currentUser) {
+    next("/login");
+  } else if (requiresAdmin && role.admin != true) {
+    next("/NotFound");
+  } else if (guestRouteNames.includes(to.name) && currentUser) {
+    next({ name: "home" });
+  } else {
+    next();
+  }
 
+  // const auth = getAuth();
+  // onAuthStateChanged(auth, (user) => {
+  //   if (guestRouteNames.includes(to.name) && user) {
+  //     next({ name: "home" });
+  //     return;
+  //   } else if (!routeNames.includes(to.name)) {
+  //     next({ name: "404" });
+  //   } else {
+  //     next();
+  //     return;
+  //   }
+  // });
+});
 export default router;

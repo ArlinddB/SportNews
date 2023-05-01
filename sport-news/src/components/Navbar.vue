@@ -34,7 +34,8 @@
         <li class="text-zinc-100 hover:text-white">
           <router-link to="/">Home</router-link>
         </li>
-        <Dropdown title="Managment" :options="managment"  v-if="user.role == 'Admin'"/>
+        <Dropdown title="Managment" :options="managment" v-if="this.admin" />
+        <!-- v-if="this.user.role == 'Admin'" -->
         <Dropdown title="News" :options="categories" />
         <Dropdown title="Standings" :options="standings" />
         <li>
@@ -52,13 +53,16 @@
             {{ this.$store.state.user.user.displayName }}
           </button> -->
 
-          <div class="relative" v-click-away="onClickAway" v-if="this.$store.state.user.user">
+          <div
+            class="relative"
+            v-click-away="onClickAway"
+            v-if="this.$store.state.user.user"
+          >
             <button
               @click="toggleDropdown"
               class="font-semibold text-zinc-100 hover:text-white rounded-md focus:outline-none inline-flex items-center"
             >
               <span>{{ this.$store.state.user.user.displayName }}</span>
-              <!-- <span>{{ user.name }}</span> -->
               <svg
                 class="fill-current h-4 w-4"
                 viewBox="0 0 20 20"
@@ -72,13 +76,25 @@
               class="absolute z-50 py-2 bg-indigo-900 lg:absolute lg:right-0 w-[120px] rounded-md shadow-lg mt-2"
             >
               <ul>
-                <router-link
-                 to="/profile"
-                  @click="toggleDropdown"
-                  class="cursor-pointer px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
-                >
-                  Profile
-                </router-link>
+                <li>
+                  <router-link
+                    to="/profile"
+                    @click="toggleDropdown"
+                    class="cursor-pointer px-4 py-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
+                  >
+                    Profile
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    v-if="admin"
+                    to="/dashboard"
+                    @click="toggleDropdown"
+                    class="cursor-pointer px-4 py-2 mt-2 text-sm text-zinc-100 hover:text-white hover:bg-indigo-400"
+                  >
+                    Dashboard
+                  </router-link>
+                </li>
                 <li
                   @click="
                     toggleDropdown();
@@ -112,14 +128,13 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { nextTick, ref } from 'vue';
 import { useDark, useToggle } from "@vueuse/core";
 import Dropdown from "./reusable/Dropdown.vue";
 import { getAuth, signOut } from "firebase/auth";
 import { directive } from "vue3-click-away";
-import { mapGetters } from 'vuex';
-import axios from 'axios';
-
+import { mapGetters } from "vuex";
+import axios from "axios";
 
 export default {
   name: "NavBar",
@@ -154,45 +169,48 @@ export default {
       ],
       open: false,
       user: {
-        id: '',
-        name: '',
-        email: '',
-        role: '',
-        abc: false,
-      }
+        id: "",
+        name: "",
+        email: "",
+        admin: false,
+      },
+      admin: false,
+      renderComponent: true,
     };
   },
   computed: {
     ...mapGetters({
-      us: 'user/user'
+      us: "user/user",
     }),
   },
   async mounted() {
-    const res = await axios.get(`${process.env.VUE_APP_API}users/${this.$store.state.user.user.uid}`)
+      const res = await axios.get(
+        `${process.env.VUE_APP_API}users/${this.$store.state.user.user.uid}`
+      );
+      const { data } = res.data;
 
-    const { data } = res;
-
-    console.log(data);
-
-    if(data){
-      this.user.id = data.user.uid;
-
-      this.user.name = data.user.displayName;
-      console.log(this.user.name);
-      this.user.email = data.user.email
-      if(data.user.customClaims.user == true){
-        this.user.role = 'User'
-      }else if(data.user.customClaims.admin == true){
-        this.user.role = 'Admin'
+      if (data != null) {
+        this.user.id = data.uid;
+        this.user.name = data.displayName;
+        this.user.email = data.email;
+        if (data.customClaims.user == true) {
+          this.user.admin = false;
+        } else if (data.customClaims.admin == true) {
+          this.user.admin = true;
+        }
       }
-      this.abc = true
-    } 
+    if (
+      this.$store.state.user.user.email == "ab52106@ubt-uni.net" ||
+      this.$store.state.user.user.email == "ek51840@ubt-uni.net"
+    )
+      this.admin = true;
   },
   methods: {
     async handleLogOut() {
+      this.admin = false;
       const auth = getAuth();
       await signOut(auth);
-      this.$router.push('/')
+      this.$router.push("/");
     },
     onClickAway(event) {
       this.open = false;

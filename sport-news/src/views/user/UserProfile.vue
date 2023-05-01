@@ -8,13 +8,13 @@
         class="min-h-[79vh]">
       <div class="pt-16">
         <div class="signup bg-gray-50 dark:bg-gray-900 shadow-md">
-          <form @submit.prevent="handleUpdate" class="form1">
+          <form @submit.prevent="handleUserUpdate" class="form1">
             <div
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
             
               <input
-              v-model="this.$store.state.user.user.displayName"
+                v-model="user.name"
                 type="text"
                 @focus="onFocus"
                 class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
@@ -31,7 +31,7 @@
               class="textbox border-b-2 border-zinc-400 dark:border-zinc-400"
             >
               <input
-                v-model="this.$store.state.user.user.email"
+                v-model="user.email"
                 disabled
                 type="email"
                 placeholder=""
@@ -53,7 +53,7 @@
               <input
                 v-if="!showPassword"
                 type="password"
-                placeholder=""
+                placeholder=" "
                 @focus="onFocus"
                 ref="passwordInput"
                 class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
@@ -62,7 +62,7 @@
               <input
                 v-else
                 type="text"
-                placeholder=""
+                placeholder=" "
                 @focus="onFocus"
                 ref="passwordInput"
                 class="border-0 outline-none focus:ring-0 input-field text-zinc-700 dark:text-zinc-300"
@@ -149,7 +149,8 @@ export default {
       this.showPassword = !this.showPassword;
     },
     async handleUserUpdate(){
-        this.$store.dispatch('user/editUser', {...this.user})
+       let a = this.$store.dispatch('user/editUser', {...this.user})
+        console.log(a);
     },
     // async handleLogInUser() {
     //   this.submitted = true;
